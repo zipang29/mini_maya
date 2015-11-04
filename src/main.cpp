@@ -14,7 +14,7 @@ int main(int argc, char** argv)
     QCommandLineOption fileOption(QStringList() << "f" << "fichier", "Utilise les données de mouvement spécifiées dans le fichier");
     args.addOption(fileOption);
 
-    args.process();
+    args.process(a);
 
     return a.exec();
 }
