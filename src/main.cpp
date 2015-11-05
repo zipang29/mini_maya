@@ -1,5 +1,7 @@
 #include <qapplication.h>
 #include <QCommandLineParser>
+#include "Parser.h"
+#include "MainWindow.h"
 
 using namespace std;
 
@@ -15,6 +17,24 @@ int main(int argc, char** argv)
     args.addOption(fileOption);
 
     args.process(a);
+
+    QStringList positionalArgs = args.positionalArguments();
+    if (positionalArgs.size() == 0)
+    {
+        args.showHelp(1);
+    }
+
+    if (!args.isSet(fileOption))
+        args.showHelp(0);
+    else
+    {
+        Parser p(positionalArgs[0]);
+        p.parse();
+    }
+
+    MainWindow w;
+    w.resize(800, 600);
+    w.show();
 
     return a.exec();
 }
