@@ -1,13 +1,20 @@
 #include "MainWindow.h"
+#include <math.h>
+#include <stdlib.h> // RAND_MAX
+
+using namespace qglviewer;
+using namespace std;
 
 void MainWindow::init()
 {
     restoreStateFromFile();
     glDisable(GL_LIGHTING);
 
+
+
     glPointSize(3.0);
     setGridIsDrawn();
-    help();
+    //help();
     startAnimation();
 }
 
@@ -31,4 +38,3 @@ QString MainWindow::helpString() const
 {
     return QString();
 }
-
