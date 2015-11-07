@@ -37,7 +37,7 @@ void Parser::parse()
     this->data.setNbOfAnalog(nbOfAnalog);
 
     QString strAnalogFrequency = f.readLine();
-    int analogFrequency = ((QString)(strNbOfAnalog.split(SEPARATOR).at(1))).toInt();
+    int analogFrequency = ((QString)(strAnalogFrequency.split(SEPARATOR).at(1))).toInt();
     this->data.setAnalogFrequency(analogFrequency);
 
     QString description = f.readLine();
