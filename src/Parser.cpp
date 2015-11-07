@@ -17,22 +17,22 @@ void Parser::parse()
         qCritical() << "Impossible d'ouvrir le fichier " << this->file;
 
     QString strNbOfFrames = f.readLine();
-    int nbOfFrames = ((QString)(strNbOfFrames.split('\t').at(1))).toInt();
+    int nbOfFrames = ((QString)(strNbOfFrames.split(SEPARATOR).at(1))).toInt();
 
     QString strNbOfCameras = f.readLine();
-    int nbOfCameras = ((QString)(strNbOfCameras.split('\t').at(1))).toInt();
+    int nbOfCameras = ((QString)(strNbOfCameras.split(SEPARATOR).at(1))).toInt();
 
     QString strNbOfMarkers = f.readLine();
-    int nbOfMarkers = ((QString)(strNbOfMarkers.split('\t').at(1))).toInt();
+    int nbOfMarkers = ((QString)(strNbOfMarkers.split(SEPARATOR).at(1))).toInt();
 
     QString strFrequency = f.readLine();
-    int frequency = ((QString)(strFrequency.split('\t').at(1))).toInt();
+    int frequency = ((QString)(strFrequency.split(SEPARATOR).at(1))).toInt();
 
     QString strNbOfAnalog = f.readLine();
-    int nbOfAnalog = ((QString)(strNbOfAnalog.split('\t').at(1))).toInt();
+    int nbOfAnalog = ((QString)(strNbOfAnalog.split(SEPARATOR).at(1))).toInt();
 
     QString strAnalogFrequency = f.readLine();
-    int analogFrequency = ((QString)(strNbOfAnalog.split('\t').at(1))).toInt();
+    int analogFrequency = ((QString)(strNbOfAnalog.split(SEPARATOR).at(1))).toInt();
 
     QString description = f.readLine();
 
@@ -46,7 +46,7 @@ void Parser::parse()
     while (!f.atEnd())
     {
         QString line = f.readLine();
-        QStringList splitLine = line.split('\t');
+        QStringList splitLine = line.split(SEPARATOR);
         for (i=0; i<nbOfMarkers; i++)
         {
             QVector<float> positionMarqueur(3);

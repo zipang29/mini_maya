@@ -1,7 +1,7 @@
 #ifndef CONSTANTES
 #define CONSTANTES
 
-#define SEPARATOR " "
+#define SEPARATOR '\t'
 
 #endif // CONSTANTES
 

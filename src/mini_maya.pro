@@ -4,13 +4,9 @@
 #
 #-------------------------------------------------
 
-QT       += core gui opengl widgets
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
 TARGET = mini_maya
-TEMPLATE = app
-
+CONFIG *= qt opengl release
+QT *= opengl xml
 
 SOURCES += main.cpp\
     Parser.cpp \
@@ -21,3 +17,9 @@ HEADERS  += \
     Parser.h \
     MainWindow.h
 
+# Windows
+INCLUDEPATH *= D:/Programmes/libQGLViewer-2.6.3
+LIBS *= -LD:/Programmes/libQGLViewer-2.6.3/QGLViewer -lQGLViewer2
+
+INCLUDEPATH += "D:/Programmes/glew-1.13.0/include"
+LIBS += -L"D:/Programmes/glew-1.13.0/lib/Release/Win32" -lglew32

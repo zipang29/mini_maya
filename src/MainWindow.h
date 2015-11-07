@@ -1,21 +1,17 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QOpenGLWindow>
-#include <QOpenGLFunctions>
+#include <QGLViewer/qglviewer.h>
 
-class MainWindow : public QOpenGLWindow
+using namespace qglviewer;
+
+class MainWindow : public QGLViewer
 {
-    Q_OBJECT
-
-    public:
-        explicit MainWindow();
-        void initializeGL();
-        void resizeGL();
-        void paintGL();
-
-    private:
-        QOpenGLFunctions * gl;
+    protected:
+      virtual void draw();
+      virtual void init();
+      virtual void animate();
+      virtual QString helpString() const;
 };
 
 #endif // MAINWINDOW_H

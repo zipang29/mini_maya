@@ -1,25 +1,34 @@
 #include "MainWindow.h"
 
-MainWindow::MainWindow()
+void MainWindow::init()
+{
+    restoreStateFromFile();
+    glDisable(GL_LIGHTING);
+
+    glPointSize(3.0);
+    setGridIsDrawn();
+    help();
+    startAnimation();
+}
+
+void MainWindow::draw()
+{
+    glBegin(GL_QUADS);
+        glNormal3d(-1, 0, 0);
+        glVertex3d(-1, 1, 1);
+        glVertex3d(-1, -1, 1);
+        glVertex3d(-1, -1, -1);
+        glVertex3d(-1, 1, -1);
+    glEnd();
+}
+
+void MainWindow::animate()
 {
 
 }
 
-void MainWindow::initializeGL()
+QString MainWindow::helpString() const
 {
-    this->gl = new QOpenGLFunctions(this->context());
-}
-
-void MainWindow::resizeGL()
-{
-
-}
-
-void MainWindow::paintGL()
-{
-    const qreal retinaScale = devicePixelRatio();
-    gl->glViewport(0, 0, width() * retinaScale, height() * retinaScale);
-
-    gl->glClear(GL_COLOR_BUFFER_BIT);
+    return QString();
 }
 
