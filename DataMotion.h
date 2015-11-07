@@ -1,0 +1,37 @@
+#ifndef DATAMOTION_H
+#define DATAMOTION_H
+
+#include <QString>
+#include <QVector>
+
+class DataMotion
+{
+    public:
+        DataMotion();
+        void setNbOfFrames(int nb);
+        void setNbOfCameras(int nb);
+        void setNbOfMarquers(int nb);
+        void setFrequency(int freq);
+        void setNbOfAnalog(int nb);
+        void setAnalogFrequency(int freq);
+        void setDescription(QString description);
+        void setTimestamp(QString timestamp);
+        void setTypeOfData(QString type);
+
+        void addDataMotion(QVector<QVector<float> > line);
+
+    private:
+        int nbOfFrames;
+        int nbOfCameras;
+        int nbOfMarkers;
+        int frequency;
+        int nbOfAnalog;
+        int analogFrequency;
+        QString description;
+        QString timestamp;
+        QString typeOfData;
+
+        QVector<QVector<QVector<float>>> * data;//line; censor; position X|Y|Z
+};
+
+#endif // DATAMOTION_H

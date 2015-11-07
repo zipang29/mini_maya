@@ -2,6 +2,7 @@
 #define PARSER_H
 
 #include <QString>
+#include "DataMotion.h"
 
 class Parser
 {
@@ -11,6 +12,7 @@ class Parser
 
     private:
         QString file;
+        DataMotion data;
 };
 
 #endif // PARSER_H

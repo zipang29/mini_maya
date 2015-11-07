@@ -22,19 +22,21 @@
 
 #include "MainWindow.h"
 #include <qapplication.h>
+#include <QCommandLineParser>
+#include "parser.h"
 
 int main(int argc, char** argv)
 {
   QApplication application(argc,argv);
 
-  /*QCommandLineParser args;
+  QCommandLineParser args;
   args.setApplicationDescription("Mini bee : Application 3D permettant de modéliser des objets à partir d'un cube via du tracking de mouvement.");
   args.addHelpOption();
 
   QCommandLineOption fileOption(QStringList() << "f" << "fichier", "Utilise les données de mouvement spécifiées dans le fichier");
   args.addOption(fileOption);
 
-  args.process(a);
+  args.process(application);
 
   QStringList positionalArgs = args.positionalArguments();
   if (positionalArgs.size() == 0)
@@ -48,7 +50,7 @@ int main(int argc, char** argv)
   {
       Parser p(positionalArgs[0]);
       p.parse();
-  }*/
+  }
 
   MainWindow w;
 
