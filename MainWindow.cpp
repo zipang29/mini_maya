@@ -13,7 +13,7 @@ void MainWindow::init()
     this->cube = new Cube();
 
     glPointSize(3.0);
-    setGridIsDrawn();
+    setGridIsDrawn(false);
     //help();
     startAnimation();
 }

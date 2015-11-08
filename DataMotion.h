@@ -19,6 +19,7 @@ class DataMotion
         void setTypeOfData(QString type);
 
         void addDataMotion(QVector<QVector<float> > line);
+        QVector<float> calculDistance(QVector<float> * p1, QVector<float> * p2);
 
     private:
         int nbOfFrames;

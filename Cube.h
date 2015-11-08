@@ -1,7 +1,8 @@
 #ifndef CUBE_H
 #define CUBE_H
 
-#include <QGLViewer/qglviewer.h>
+
+#include "enum.h"
 
 class Cube
 {
@@ -10,6 +11,9 @@ class Cube
         void init();
         void draw();
         void animate();
+
+    private:
+        Actions::Mode currentMode;
 };
 
 #endif // CUBE_H
