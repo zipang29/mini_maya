@@ -32,6 +32,22 @@ void Cube::init()
     x_F = 1;
     y_F = 1;
     z_F = 1;
+
+    x_A = -1;
+    y_A = 1;
+    z_A = -1;
+
+    x_E = -1;
+    y_E = 1;
+    z_E = 1;
+
+    x_D = -1;
+    y_D = -1;
+    z_D = -1;
+
+    x_H = -1;
+    y_H = -1;
+    z_H = 1;
 }
 
 void Cube::draw()
@@ -40,8 +56,8 @@ void Cube::draw()
         glColor3ub(255, 0, 0); //face rouge => face haut
         glVertex3d(x_F, y_F, z_F);
         glVertex3d(x_B, y_B, z_B);
-        glVertex3d(-1, 1, -1);
-        glVertex3d(-1, 1, 1);
+        glVertex3d(x_A, y_A, z_A);
+        glVertex3d(x_E, y_E, z_E);
 
         glColor3ub(0, 255, 0); //face verte => face droite => FD
         glVertex3f(x_G, y_G, z_G);
@@ -50,28 +66,28 @@ void Cube::draw()
         glVertex3f(x_F, y_F, z_F);
 
         glColor3ub(0, 0, 255); //face bleue => fasse bas
-        glVertex3d(-1, -1, 1);
-        glVertex3d(-1, -1, -1);
+        glVertex3d(x_H, y_H, z_H);
+        glVertex3d(x_D, y_D, z_D);
         glVertex3d(x_C, y_C, z_C);
         glVertex3d(x_G, y_G, z_G);
 
         glColor3ub(255, 255, 0); //face jaune => face gauche
-        glVertex3d(-1, 1, 1);
-        glVertex3d(-1, 1, -1);
-        glVertex3d(-1, -1, -1);
-        glVertex3d(-1, -1, 1);
+        glVertex3d(x_E, y_E, z_E);
+        glVertex3d(x_A, y_A, z_A);
+        glVertex3d(x_D, y_D, z_D);
+        glVertex3d(x_H, y_H, z_H);
 
         glColor3ub(0, 255, 255); //face cyan => face derrière
         glVertex3d(x_B, y_B, z_B);
         glVertex3d(x_C, y_C, z_C);
-        glVertex3d(-1, -1, -1);
-        glVertex3d(-1, 1, -1);
+        glVertex3d(x_D, y_D, z_D);
+        glVertex3d(x_A, y_A, z_A);
 
         glColor3ub(255, 0, 255); //face magenta => face avant
         glVertex3d(x_G, y_G, z_G);
         glVertex3d(x_F, y_F, z_F);
-        glVertex3d(-1, 1, 1);
-        glVertex3d(-1, -1, 1);
+        glVertex3d(x_E, y_E, z_E);
+        glVertex3d(x_H, y_H, z_H);
     glEnd();
 }
 
@@ -94,10 +110,17 @@ void Cube::animate()
 
                 QVector<float> distance = this->data->calculDistance(&mainDroite1, &mainDroite2);
 
-                x_G = distance.at(0);
-                x_C = distance.at(0);
-                x_B = distance.at(0);
-                x_F = distance.at(0);
+                float d = distance.at(0) / 40;
+
+                x_G += d;
+                x_C += d;
+                x_B += d;
+                x_F += d;
+
+                x_A -= d;
+                x_E -= d;
+                x_D -= d;
+                x_H -= d;
             }
             break;
             case Actions::ROTATE:

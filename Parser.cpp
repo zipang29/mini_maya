@@ -2,7 +2,6 @@
 #include <QFile>
 #include <QStringList>
 #include <QDebug>
-#include <Constantes.h>
 #include <QVector>
 
 DataMotion * Parser::data = NULL;
