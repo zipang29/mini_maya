@@ -9,10 +9,11 @@ class Parser
     public:
         Parser(QString file);
         void parse();
+        static DataMotion * getDataMotion();
 
     private:
         QString file;
-        DataMotion data;
+        static DataMotion * data;
 };
 
 #endif // PARSER_H

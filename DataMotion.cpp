@@ -56,9 +56,19 @@ void DataMotion::addDataMotion(QVector<QVector<float>> line)
     this->data->push_back(line);
 }
 
+QVector<QVector<QVector<float>>> * DataMotion::getData()
+{
+    return this->data;
+}
+
+QVector<QVector<float>> DataMotion::getDataLine(int line)
+{
+    return data->at(line);
+}
+
 QVector<float> DataMotion::calculDistance(QVector<float> * p1, QVector<float> * p2)
 {
-    QVector<float> result(3);
+    QVector<float> result;
     result.push_back(p1->at(0) - p2->at(0));
     result.push_back(p1->at(1) - p2->at(1));
     result.push_back(p1->at(2) - p2->at(2));

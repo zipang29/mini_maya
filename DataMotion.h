@@ -17,6 +17,9 @@ class DataMotion
         void setDescription(QString description);
         void setTimestamp(QString timestamp);
         void setTypeOfData(QString type);
+        QVector<QVector<QVector<float>>> * getData();
+        QVector<QVector<float> > getDataLine(int line);
+
 
         void addDataMotion(QVector<QVector<float> > line);
         QVector<float> calculDistance(QVector<float> * p1, QVector<float> * p2);

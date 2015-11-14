@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 #include <math.h>
 #include <stdlib.h> // RAND_MAX
+#include <QDebug>
 
 using namespace qglviewer;
 using namespace std;

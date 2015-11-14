@@ -1,5 +1,6 @@
 #include <QGLViewer/qglviewer.h>
 #include "Cube.h"
+#include "DataMotion.h"
 
 class MainWindow : public QGLViewer
 {
@@ -11,5 +12,6 @@ class MainWindow : public QGLViewer
 
     private:
         Cube * cube;
+        DataMotion * data;
 };
 
