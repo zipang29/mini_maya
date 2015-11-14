@@ -85,15 +85,35 @@ void Cube::animate()
         this->lineNumber = 0;// on recommence l'annimation
     else
     {
-        QVector<float> mainDroite1 = lineStart.at(4);
-        QVector<float> mainDroite2 = lineEnd.at(4);
+        switch(this->currentMode)
+        {
+            case Actions::RESIZE:
+                QVector<float> mainDroite1 = lineStart.at(4);
+                QVector<float> mainDroite2 = lineEnd.at(4);
 
-        QVector<float> distance = this->data->calculDistance(&mainDroite1, &mainDroite2);
+                QVector<float> distance = this->data->calculDistance(&mainDroite1, &mainDroite2);
 
-        x_G = distance.at(0);
-        x_C = distance.at(0);
-        x_B = distance.at(0);
-        x_F = distance.at(0);
+                x_G = distance.at(0);
+                x_C = distance.at(0);
+                x_B = distance.at(0);
+                x_F = distance.at(0);
+            break;
+            case Actions::ROTATE:
+
+            break;
+            case Actions::TWIST:
+
+            break;
+            case Actions::SELECT:
+
+            break;
+            case Actions::EXTRUDE:
+
+            break;
+            default:
+                qCritical() << "Le mode sélectionné n'existe pas.";
+            break;
+        }
     }
 
     this->lineNumber++;

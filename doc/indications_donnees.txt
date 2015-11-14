@@ -1,0 +1,17 @@
+Voici les données de la mocap de Nailya, les fichiers .qtm sont les binaires de QTM tandis-que les .tsv sont les fichiers textes.
+
+Chaque point est nommé :
+dirY et dirX le repère posé sur la boite devant Nailya.
+
+RF : Right finger (bout du majeur de la main droite)
+RH : Right hand (point sur l'extérieur de la main droite)
+RW : Right wrist (point sur l'extérieur du poignet)
+RE : Right elbow (coude droit)
+RS : Right shoulder (epaule droite)
+NECK : Point à la base du cou.
+
+Idem pour le coté gauche (remplacer R par L).
+
+Le fichier MiniMaya.txt est la liste des noms des points pour réimportation dans QTM en cas de besoin (réassigner des noms au points)
+
+A noter que si un point a des coordonnées nulles (0,0) c'est que ce point a été perdu de vue des caméras (ou alors Nailya a fusionnée avec la boite en carton) et il faut donc l'ignorer.
