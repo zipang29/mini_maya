@@ -11,7 +11,6 @@ TEMPLATE = app
 TARGET   = mini_bee
 
 HEADERS  = \
-    Constantes.h \
     Parser.h \
     MainWindow.h \
     Cube.h \
