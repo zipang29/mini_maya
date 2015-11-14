@@ -15,15 +15,9 @@ class Cube
         void animate();
 
     private:
-        Actions::Mode currentMode;
+        Modes::Mode currentMode;
         int lineNumber;
         DataMotion * data;
-
-        //face droite
-        /*float x_FD_HG, y_FD_HG, z_FD_HG;
-        float x_FD_HD, y_FD_HD, z_FD_HD;
-        float x_FD_BG, y_FD_BG, z_FD_BG;
-        float x_FD_BD, y_FD_BD, z_FD_BD;*/
 
         // Correspond aux vertex du cube. On part de la face avant dans le sens des aiguilles d'une montre en partant du point en haut à gauche de la
         // face du devant du cube puise on fait pareille pour la face arrière

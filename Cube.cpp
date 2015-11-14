@@ -12,7 +12,7 @@ Cube::Cube()
 
 void Cube::init()
 {
-    this->currentMode = Actions::RESIZE;
+    this->currentMode = Modes::RESIZE;
     this->lineNumber = 0;
     this->data = Parser::getDataMotion();
 
@@ -103,33 +103,51 @@ void Cube::animate()
     {
         switch(this->currentMode)
         {
-            case Actions::RESIZE:
+            case Modes::RESIZE:
             {
                 QVector<float> mainDroite1 = lineStart.at(4);
                 QVector<float> mainDroite2 = lineEnd.at(4);
 
+                QVector<float> mainGaucheInterieur = lineStart.at(6);
+                QVector<float> mainGaucheExtreminte = lineStart.at(7);
+
                 QVector<float> distance = this->data->calculDistance(&mainDroite1, &mainDroite2);
+                Axes::Axe axe = this->data->determineAxe(&mainGaucheInterieur, &mainGaucheExtreminte);
 
-                float d = distance.at(0) / 40;
+                if (axe == Axes::X)
+                {
+                    qDebug() << "axe X";
+                    float d = distance.at(0) / 40; // 40 détermine l'échelle à laquelle le cube va être redimentionné (pour rester dans des proportions acceptables)
 
-                x_G += d;
-                x_C += d;
-                x_B += d;
-                x_F += d;
+                    x_G += d;
+                    x_C += d;
+                    x_B += d;
+                    x_F += d;
 
-                x_A -= d;
-                x_E -= d;
-                x_D -= d;
-                x_H -= d;
+                    x_A -= d;
+                    x_E -= d;
+                    x_D -= d;
+                    x_H -= d;
+                }
+                else if (axe == Axes::Y)
+                {
+                    qDebug() << "axe Y";
+                }
+                else if (axe == Axes::Z)
+                {
+                    qDebug() << "axe Z";
+                }
+                else
+                    qWarning() << "L'axe n'a pas pu être déterminé.";
             }
             break;
-            case Actions::ROTATE:
+            case Modes::ROTATE:
 
-            case Actions::TWIST:
+            case Modes::TWIST:
 
-            case Actions::SELECT:
+            case Modes::SELECT:
 
-            case Actions::EXTRUDE:
+            case Modes::EXTRUDE:
 
             default:
                 qCritical() << "Le mode sélectionné n'existe pas.";

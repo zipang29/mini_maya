@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QVector>
+#include "Enum.h"
 
 class DataMotion
 {
@@ -23,6 +24,7 @@ class DataMotion
 
         void addDataMotion(QVector<QVector<float> > line);
         QVector<float> calculDistance(QVector<float> * p1, QVector<float> * p2);
+        Axes::Axe determineAxe(QVector<float> * p1, QVector<float> * p2);
 
     private:
         int nbOfFrames;

@@ -74,3 +74,23 @@ QVector<float> DataMotion::calculDistance(QVector<float> * p1, QVector<float> * 
     result.push_back(p1->at(2) - p2->at(2));
     return result;
 }
+
+Axes::Axe DataMotion::determineAxe(QVector<float> * p1, QVector<float> * p2)
+{
+    QVector<float> distance = calculDistance(p1, p2);
+
+    if (qAbs(distance.at(0)) > 20) // détection axe x
+    {
+        return Axes::X;
+    }
+    if (qAbs(distance.at(1)) > 20) // détection axe y
+    {
+        return Axes::Y;
+    }
+    if (qAbs(distance.at(2)) > 20) // détection axe z
+    {
+        return Axes::Z;
+    }
+
+    return Axes::UNDEFINED;
+}
