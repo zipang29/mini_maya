@@ -88,6 +88,7 @@ void Cube::animate()
         switch(this->currentMode)
         {
             case Actions::RESIZE:
+            {
                 QVector<float> mainDroite1 = lineStart.at(4);
                 QVector<float> mainDroite2 = lineEnd.at(4);
 
@@ -97,19 +98,16 @@ void Cube::animate()
                 x_C = distance.at(0);
                 x_B = distance.at(0);
                 x_F = distance.at(0);
+            }
             break;
             case Actions::ROTATE:
 
-            break;
             case Actions::TWIST:
 
-            break;
             case Actions::SELECT:
 
-            break;
             case Actions::EXTRUDE:
 
-            break;
             default:
                 qCritical() << "Le mode sélectionné n'existe pas.";
             break;
