@@ -13,7 +13,7 @@ Cube::Cube()
 
 void Cube::init()
 {
-    this->currentMode = Modes::ROTATE;
+    this->currentMode = Modes::RESIZE;
     this->lineNumber = 0;
     this->data = Parser::getDataMotion();
 
