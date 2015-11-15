@@ -114,7 +114,7 @@ void Cube::animate()
                 QVector<float> distance = this->data->calculDistance(&mainDroite1, &mainDroite2);
                 Axes::Axe axe = this->data->determineAxe(&mainGaucheInterieur, &mainGaucheExtreminte);
 
-                if (axe == Axes::X)
+                if (axe == Axes::X || axe == Axes::ALL)
                 {
                     qDebug() << "axe X";
                     float d = distance.at(0) / 40; // 40 détermine l'échelle à laquelle le cube va être redimentionné (pour rester dans des proportions acceptables)
@@ -129,7 +129,7 @@ void Cube::animate()
                     x_D -= d;
                     x_H -= d;
                 }
-                else if (axe == Axes::Y)
+                if (axe == Axes::Y || axe == Axes::ALL)
                 {
                     qDebug() << "axe Y";
                     float d = distance.at(1) / 40;
@@ -144,7 +144,7 @@ void Cube::animate()
                     y_G -= d;
                     y_C -= d;
                 }
-                else if (axe == Axes::Z)
+                if (axe == Axes::Z || axe == Axes::ALL)
                 {
                     qDebug() << "axe Z";
                     float d = distance.at(2) / 40;
@@ -159,49 +159,14 @@ void Cube::animate()
                     z_H -= d;
                     z_G -= d;
                 }
-                else if (axe == Axes::ALL)
-                {
-                    float dx = distance.at(0) / 40;
-                    float dy = distance.at(1) / 40;
-                    float dz = distance.at(2) / 40;
 
-                    x_B += dx;
-                    x_F += dx;
-                    x_G += dx;
-                    x_C += dx;
-
-                    x_A -= dx;
-                    x_E -= dx;
-                    x_D -= dx;
-                    x_H -= dx;
-
-                    y_A += dy;
-                    y_E += dy;
-                    y_F += dy;
-                    y_B += dy;
-
-                    y_D -= dy;
-                    y_H -= dy;
-                    y_G -= dy;
-                    y_C -= dy;
-
-                    z_A += dz;
-                    z_B += dz;
-                    z_D += dz;
-                    z_C += dz;
-
-                    z_E -= dz;
-                    z_F -= dz;
-                    z_H -= dz;
-                    z_G -= dz;
-
-                }
-                else
-                    qWarning() << "L'axe n'a pas pu être déterminé.";
+                if (axe == Axes::UNDEFINED)
+                    qCritical() << "L'axe n'a pas pu être déterminé.";
             }
             break;
             case Modes::ROTATE:
 
+            break;
             case Modes::TWIST:
 
             case Modes::SELECT:
