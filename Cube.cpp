@@ -13,9 +13,14 @@ Cube::Cube()
 
 void Cube::init()
 {
-    this->currentMode = Modes::RESIZE;
+    this->currentMode = Modes::ROTATE;
     this->lineNumber = 0;
     this->data = Parser::getDataMotion();
+
+    // Angle de rotation
+    angleX = 0;
+    angleY = 0;
+    angleZ = 0;
 
     // Initialisation des positions des vertex du cube
     x_G = 1;
@@ -53,7 +58,11 @@ void Cube::init()
 
 void Cube::draw()
 {
+    glRotatef(angleX, 1, 0, 0);
+    glRotatef(angleY, 0, 1, 0);
+    glRotatef(angleZ, 0, 0, 1);
     glBegin(GL_QUADS);
+
         glColor3ub(255, 0, 0); //face rouge => face haut
         glVertex3d(x_F, y_F, z_F);
         glVertex3d(x_B, y_B, z_B);
@@ -170,22 +179,27 @@ void Cube::animate()
             {
                 qDebug() << "Rotation : ";
                 Axes::Axe axe = Axes::X;
-                float angleX = 0;// Todo a calculer à partir des données
-                float angleY = 0;// Todo a calculer à partir des données
-                float angleZ = 0;// Todo a calculer à partir des données
-
 
                 if (axe == Axes::X || axe == Axes::ALL)
                 {
                     qDebug() << "axe X";
+                    angleX++;// Todo a calculer à partir des données
+                    if (angleX > 360)
+                        angleX = 0;
                 }
                 if (axe == Axes::Y || axe == Axes::ALL)
                 {
                     qDebug() << "axe Y";
+                    angleY++;// Todo a calculer à partir des données
+                    if (angleY > 360)
+                        angleY = 0;
                 }
                 if (axe == Axes::Z || axe == Axes::ALL)
                 {
                     qDebug() << "axe Z";
+                    angleZ++;// Todo a calculer à partir des données
+                    if (angleZ > 360)
+                        angleZ = 0;
                 }
                 if (axe == Axes::UNDEFINED)
                     qCritical() << "L'/les axe(s) de redimentionnement n'a/n'ont' pas pu être(s) déterminé(s).";

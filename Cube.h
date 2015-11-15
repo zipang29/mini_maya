@@ -29,6 +29,10 @@ class Cube
         float x_F, y_F, z_F;
         float x_G, y_G, z_G;
         float x_H, y_H, z_H;
+
+        float angleX;
+        float angleY;
+        float angleZ;
 };
 
 #endif // CUBE_H
