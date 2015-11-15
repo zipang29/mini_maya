@@ -3,6 +3,7 @@
 #include <QGLViewer/qglviewer.h>
 #include <QVector>
 #include <QDebug>
+#include <qmath.h>
 #include "parser.h"
 
 Cube::Cube()
@@ -105,6 +106,7 @@ void Cube::animate()
         {
             case Modes::RESIZE:
             {
+                qDebug() << "Redimention :";
                 QVector<float> mainDroite1 = lineStart.at(4);
                 QVector<float> mainDroite2 = lineEnd.at(4);
 
@@ -161,18 +163,49 @@ void Cube::animate()
                 }
 
                 if (axe == Axes::UNDEFINED)
-                    qCritical() << "L'axe n'a pas pu être déterminé.";
+                    qCritical() << "L'/les axe(s) de redimentionnement n'a/n'ont' pas pu être(s) déterminé(s).";
             }
             break;
             case Modes::ROTATE:
+            {
+                qDebug() << "Rotation : ";
+                Axes::Axe axe = Axes::X;
+                float angleX = 0;// Todo a calculer à partir des données
+                float angleY = 0;// Todo a calculer à partir des données
+                float angleZ = 0;// Todo a calculer à partir des données
 
+
+                if (axe == Axes::X || axe == Axes::ALL)
+                {
+                    qDebug() << "axe X";
+                }
+                if (axe == Axes::Y || axe == Axes::ALL)
+                {
+                    qDebug() << "axe Y";
+                }
+                if (axe == Axes::Z || axe == Axes::ALL)
+                {
+                    qDebug() << "axe Z";
+                }
+                if (axe == Axes::UNDEFINED)
+                    qCritical() << "L'/les axe(s) de redimentionnement n'a/n'ont' pas pu être(s) déterminé(s).";
+            }
             break;
             case Modes::TWIST:
-
+            {
+                qDebug() << "Twist :";
+            }
+            break;
             case Modes::SELECT:
-
+            {
+                qDebug() << "Selection :";
+            }
+            break;
             case Modes::EXTRUDE:
-
+            {
+                qDebug() << "Extrusion :";
+            }
+            break;
             default:
                 qCritical() << "Le mode sélectionné n'existe pas.";
             break;
