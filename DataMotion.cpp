@@ -79,18 +79,36 @@ Axes::Axe DataMotion::determineAxe(QVector<float> * p1, QVector<float> * p2)
 {
     QVector<float> distance = calculDistance(p1, p2);
 
-    if (qAbs(distance.at(0)) > 20) // détection axe x
+    /*QVector<Axes::Axe> axes;
+    if (qAbs(distance.at(0)) > 5) // détection axe x
     {
+        axes.push_back(Axes::X);
+    }
+    if (qAbs(distance.at(1)) > 5) // détection axe y
+    {
+        axes.push_back(Axes::Y);
+    }
+    if (qAbs(distance.at(2)) > 5) // détection axe z
+    {
+        axes.push_back(Axes::Z);
+    }
+
+    if (axes.empty())
+        return Axes::UNDEFINED;*/
+
+    float max = qAbs(distance.at(0));
+
+    for (int i=1; i<distance.size(); i++)
+    {
+        max = qMax(qAbs(max), qAbs(distance.at(i)));
+    }
+
+    if (max == qAbs(distance.at(0)))
         return Axes::X;
-    }
-    if (qAbs(distance.at(1)) > 20) // détection axe y
-    {
+    if (max == qAbs(distance.at(1)))
         return Axes::Y;
-    }
-    if (qAbs(distance.at(2)) > 20) // détection axe z
-    {
+    if (max == qAbs(distance.at(2)))
         return Axes::Z;
-    }
 
     return Axes::UNDEFINED;
 }
