@@ -1,5 +1,6 @@
 #include "DataMotion.h"
 #include <QDebug>
+#include <qmath.h>
 
 DataMotion::DataMotion()
 {

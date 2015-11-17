@@ -178,26 +178,36 @@ void Cube::animate()
             case Modes::ROTATE:
             {
                 qDebug() << "Rotation : ";
-                Axes::Axe axe = Axes::X;
+                QVector<float> mainDroite1 = lineStart.at(4);
+                QVector<float> mainDroite2 = lineEnd.at(4);
+
+                QVector<float> mainGaucheInterieur = lineStart.at(6);
+                QVector<float> mainGaucheExtreminte = lineStart.at(7);
+
+                Axes::Axe axe = this->data->determineAxe(&mainGaucheInterieur, &mainGaucheExtreminte);
+                float angleRotation = 0;
 
                 if (axe == Axes::X || axe == Axes::ALL)
                 {
                     qDebug() << "axe X";
-                    angleX++;// Todo a calculer à partir des données
+                    angleRotation = this->data->calculerAngle(mainGaucheInterieur.at(Axes::X), mainDroite2.at(Axes::X), mainDroite1.at(Axes::X), 'A');
+                    angleX += angleRotation;// Todo a calculer à partir des données
                     if (angleX > 360)
                         angleX = 0;
                 }
                 if (axe == Axes::Y || axe == Axes::ALL)
                 {
                     qDebug() << "axe Y";
-                    angleY++;// Todo a calculer à partir des données
+                    angleRotation = this->data->calculerAngle(mainGaucheInterieur.at(Axes::Y), mainDroite2.at(Axes::Y), mainDroite1.at(Axes::Y), 'A');
+                    angleY += angleRotation;// Todo a calculer à partir des données
                     if (angleY > 360)
                         angleY = 0;
                 }
                 if (axe == Axes::Z || axe == Axes::ALL)
                 {
                     qDebug() << "axe Z";
-                    angleZ++;// Todo a calculer à partir des données
+                    angleRotation = this->data->calculerAngle(mainGaucheInterieur.at(Axes::Z), mainDroite2.at(Axes::Z), mainDroite1.at(Axes::Z), 'A');
+                    angleZ += angleRotation;// Todo a calculer à partir des données
                     if (angleZ > 360)
                         angleZ = 0;
                 }
