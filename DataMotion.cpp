@@ -79,23 +79,6 @@ Axes::Axe DataMotion::determineAxe(QVector<float> * p1, QVector<float> * p2)
 {
     QVector<float> distance = calculDistance(p1, p2);
 
-    /*QVector<Axes::Axe> axes;
-    if (qAbs(distance.at(0)) > 5) // détection axe x
-    {
-        axes.push_back(Axes::X);
-    }
-    if (qAbs(distance.at(1)) > 5) // détection axe y
-    {
-        axes.push_back(Axes::Y);
-    }
-    if (qAbs(distance.at(2)) > 5) // détection axe z
-    {
-        axes.push_back(Axes::Z);
-    }
-
-    if (axes.empty())
-        return Axes::UNDEFINED;*/
-
     float max = qAbs(distance.at(0));
 
     for (int i=1; i<distance.size(); i++)
@@ -111,4 +94,24 @@ Axes::Axe DataMotion::determineAxe(QVector<float> * p1, QVector<float> * p2)
         return Axes::Z;
 
     return Axes::UNDEFINED;
+}
+
+float DataMotion::calculerAngle(float A, float B, float C, char angle)
+{
+    float A2 = qPow(A, 2);
+    float B2 = qPow(B, 2);
+    float C2 = qPow(C, 2);
+    if (angle == 'A')
+    {
+        return qAcos((B2 + C2 - A2) / 2 * B * C);
+    }
+    if (angle == 'B')
+    {
+        return qAcos((A2 + C2 - B2) / 2 * A * C);
+    }
+    if (angle == 'C')
+    {
+        return qAcos((A2 + B2 - C2) / 2 * A * B);
+    }
+    return 0;
 }
