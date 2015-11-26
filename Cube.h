@@ -5,6 +5,9 @@
 #include "enum.h"
 #include "DataMotion.h"
 #include <QVector>
+#include <QCursor>
+#include <QDesktopWidget>
+#include <QApplication>
 
 class Cube
 {
@@ -13,8 +16,12 @@ class Cube
         void init();
         void draw();
         void animate();
+        void changeMode(Modes::Mode mode);
+        void setCursor(QCursor c);
 
     private:
+        QDesktopWidget * resolution;
+        QCursor c;
         Modes::Mode currentMode;
         int lineNumber;
         DataMotion * data;

@@ -13,6 +13,7 @@ Cube::Cube()
 
 void Cube::init()
 {
+    this->resolution = QApplication::desktop();
     this->currentMode = Modes::RESIZE;
     this->lineNumber = 0;
     this->data = Parser::getDataMotion();
@@ -116,11 +117,11 @@ void Cube::animate()
             case Modes::RESIZE:
             {
                 qDebug() << "Redimention :";
-                QVector<float> mainDroite1 = lineStart.at(4);
-                QVector<float> mainDroite2 = lineEnd.at(4);
+                QVector<float> mainDroite1 = lineStart.at(1);
+                QVector<float> mainDroite2 = lineEnd.at(1);
 
-                QVector<float> mainGaucheInterieur = lineStart.at(6);
-                QVector<float> mainGaucheExtreminte = lineStart.at(7);
+                QVector<float> mainGaucheInterieur = lineStart.at(4);
+                QVector<float> mainGaucheExtreminte = lineStart.at(3);
 
                 QVector<float> distance = this->data->calculDistance(&mainDroite1, &mainDroite2);
                 Axes::Axe axe = this->data->determineAxe(&mainGaucheInterieur, &mainGaucheExtreminte);
@@ -178,19 +179,19 @@ void Cube::animate()
             case Modes::ROTATE:
             {
                 qDebug() << "Rotation : ";
-                QVector<float> mainDroite1 = lineStart.at(4);
-                QVector<float> mainDroite2 = lineEnd.at(4);
+                QVector<float> mainDroite1 = lineStart.at(1);
+                QVector<float> mainDroite2 = lineEnd.at(1);
 
-                QVector<float> mainGaucheInterieur = lineStart.at(6);
-                QVector<float> mainGaucheExtreminte = lineStart.at(7);
+                QVector<float> mainGaucheInterieur = lineStart.at(5);
+                QVector<float> mainGaucheExtreminte = lineStart.at(3);
 
                 Axes::Axe axe = this->data->determineAxe(&mainGaucheInterieur, &mainGaucheExtreminte);
                 float angleRotation = 0;
-
+                QVector<float> distance = this->data->calculDistance(&mainDroite1, &mainDroite2);
                 if (axe == Axes::X || axe == Axes::ALL)
                 {
                     qDebug() << "axe X";
-                    angleRotation = this->data->calculerAngle(mainGaucheInterieur.at(Axes::X), mainDroite2.at(Axes::X), mainDroite1.at(Axes::X), 'A');
+                    angleRotation = distance.at(Axes::X);//(distance.at(Axes::X) / 360) * 100;
                     angleX += angleRotation;// Todo a calculer à partir des données
                     if (angleX > 360)
                         angleX = 0;
@@ -198,7 +199,7 @@ void Cube::animate()
                 if (axe == Axes::Y || axe == Axes::ALL)
                 {
                     qDebug() << "axe Y";
-                    angleRotation = this->data->calculerAngle(mainGaucheInterieur.at(Axes::Y), mainDroite2.at(Axes::Y), mainDroite1.at(Axes::Y), 'A');
+                    angleRotation = distance.at(Axes::X);//(distance.at(Axes::X) / 360) * 100;
                     angleY += angleRotation;// Todo a calculer à partir des données
                     if (angleY > 360)
                         angleY = 0;
@@ -206,7 +207,7 @@ void Cube::animate()
                 if (axe == Axes::Z || axe == Axes::ALL)
                 {
                     qDebug() << "axe Z";
-                    angleRotation = this->data->calculerAngle(mainGaucheInterieur.at(Axes::Z), mainDroite2.at(Axes::Z), mainDroite1.at(Axes::Z), 'A');
+                    angleRotation = distance.at(Axes::X);//(distance.at(Axes::X) / 360) * 100;
                     angleZ += angleRotation;// Todo a calculer à partir des données
                     if (angleZ > 360)
                         angleZ = 0;
@@ -223,6 +224,11 @@ void Cube::animate()
             case Modes::SELECT:
             {
                 qDebug() << "Selection :";
+                int width = this->resolution->screenGeometry().width();
+                int height = this->resolution->screenGeometry().height();
+
+                QVector<float> mainCurseur = lineEnd.at(4);
+                this->c.setPos(mainCurseur.at(Axes::X), mainCurseur.at(Axes::Y));
             }
             break;
             case Modes::EXTRUDE:
@@ -237,4 +243,14 @@ void Cube::animate()
     }
 
     this->lineNumber++;
+}
+
+void Cube::setCursor(QCursor c)
+{
+    this->c = c;
+}
+
+void Cube::changeMode(Modes::Mode mode)
+{
+    this->currentMode = mode;
 }

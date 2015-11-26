@@ -26,6 +26,7 @@ void MainWindow::draw()
 
 void MainWindow::animate()
 {
+    this->cube->setCursor(this->window()->cursor());
     this->cube->animate();
 }
 

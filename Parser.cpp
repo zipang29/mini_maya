@@ -62,9 +62,9 @@ void Parser::parse()
         for (i=0; i<nbOfMarkers; i++)
         {
             QVector<float> positionMarqueur(3);
-            positionMarqueur[0] = ((QString)splitLine.at(i*3)).toFloat();
-            positionMarqueur[1] = ((QString)splitLine.at(i*3+1)).toFloat();
-            positionMarqueur[2] = ((QString)splitLine.at(i*3+2)).toFloat();
+            positionMarqueur[0] = ((QString)splitLine.at((i*3)+1)).toFloat();
+            positionMarqueur[1] = ((QString)splitLine.at((i*3+1)+1)).toFloat();
+            positionMarqueur[2] = ((QString)splitLine.at((i*3+2)+1)).toFloat();
             lineVec.push_back(positionMarqueur);
         }
         this->data->addDataMotion(lineVec);

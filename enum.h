@@ -14,9 +14,9 @@ struct Modes {
 struct Axes {
     enum Axe {
         UNDEFINED = -1,
-        X = 0,
-        Y = 1,
-        Z = 2,
+        X = 2,
+        Y = 0,
+        Z = 1,
         ALL = 3
     };
 };

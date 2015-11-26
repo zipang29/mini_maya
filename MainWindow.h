@@ -13,5 +13,6 @@ class MainWindow : public QGLViewer
     private:
         Cube * cube;
         DataMotion * data;
+        QCursor cursor;
 };
 

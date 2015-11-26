@@ -70,9 +70,9 @@ QVector<QVector<float>> DataMotion::getDataLine(int line)
 QVector<float> DataMotion::calculDistance(QVector<float> * p1, QVector<float> * p2)
 {
     QVector<float> result;
-    result.push_back(p1->at(0) - p2->at(0));
-    result.push_back(p1->at(1) - p2->at(1));
-    result.push_back(p1->at(2) - p2->at(2));
+    result.push_back(p1->at(Axes::X) - p2->at(Axes::X));
+    result.push_back(p1->at(Axes::Y) - p2->at(Axes::Y));
+    result.push_back(p1->at(Axes::Z) - p2->at(Axes::Z));
     return result;
 }
 
@@ -80,18 +80,18 @@ Axes::Axe DataMotion::determineAxe(QVector<float> * p1, QVector<float> * p2)
 {
     QVector<float> distance = calculDistance(p1, p2);
 
-    float max = qAbs(distance.at(0));
+    float max = qAbs(distance.at(0));// Ne pas remplacer 0 par Axes::X car cela a des effets de bords
 
     for (int i=1; i<distance.size(); i++)
     {
         max = qMax(qAbs(max), qAbs(distance.at(i)));
     }
 
-    if (max == qAbs(distance.at(0)))
+    if (max == qAbs(distance.at(Axes::X)))
         return Axes::X;
-    if (max == qAbs(distance.at(1)))
+    if (max == qAbs(distance.at(Axes::Y)))
         return Axes::Y;
-    if (max == qAbs(distance.at(2)))
+    if (max == qAbs(distance.at(Axes::Z)))
         return Axes::Z;
 
     return Axes::UNDEFINED;
@@ -116,3 +116,5 @@ float DataMotion::calculerAngle(float A, float B, float C, char angle)
     }
     return 0;
 }
+
+
