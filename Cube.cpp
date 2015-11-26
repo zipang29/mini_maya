@@ -14,7 +14,7 @@ Cube::Cube()
 void Cube::init()
 {
     this->resolution = QApplication::desktop();
-    this->currentMode = Modes::RESIZE;
+    this->currentMode = Modes::ROTATE;
     this->lineNumber = 0;
     this->data = Parser::getDataMotion();
 
@@ -64,36 +64,42 @@ void Cube::draw()
     glRotatef(angleZ, 0, 0, 1);
     glBegin(GL_QUADS);
 
+        glNormal3d(0, 1, 0);
         glColor3ub(255, 0, 0); //face rouge => face haut
         glVertex3d(x_F, y_F, z_F);
         glVertex3d(x_B, y_B, z_B);
         glVertex3d(x_A, y_A, z_A);
         glVertex3d(x_E, y_E, z_E);
 
+        glNormal3d(1, 0, 0);
         glColor3ub(0, 255, 0); //face verte => face droite => FD
         glVertex3f(x_G, y_G, z_G);
         glVertex3f(x_C, y_C, z_C);
         glVertex3f(x_B, y_B, z_B);
         glVertex3f(x_F, y_F, z_F);
 
+        glNormal3d(0, -1, 0);
         glColor3ub(0, 0, 255); //face bleue => fasse bas
         glVertex3d(x_H, y_H, z_H);
         glVertex3d(x_D, y_D, z_D);
         glVertex3d(x_C, y_C, z_C);
         glVertex3d(x_G, y_G, z_G);
 
+        glNormal3d(-1, 0, 0);
         glColor3ub(255, 255, 0); //face jaune => face gauche
         glVertex3d(x_E, y_E, z_E);
         glVertex3d(x_A, y_A, z_A);
         glVertex3d(x_D, y_D, z_D);
         glVertex3d(x_H, y_H, z_H);
 
+        glNormal3d(0, 0, -1);
         glColor3ub(0, 255, 255); //face cyan => face derrière
         glVertex3d(x_B, y_B, z_B);
         glVertex3d(x_C, y_C, z_C);
         glVertex3d(x_D, y_D, z_D);
         glVertex3d(x_A, y_A, z_A);
 
+        glNormal3d(0, 0, 1);
         glColor3ub(255, 0, 255); //face magenta => face avant
         glVertex3d(x_G, y_G, z_G);
         glVertex3d(x_F, y_F, z_F);
@@ -120,7 +126,7 @@ void Cube::animate()
                 QVector<float> mainDroite1 = lineStart.at(1);
                 QVector<float> mainDroite2 = lineEnd.at(1);
 
-                QVector<float> mainGaucheInterieur = lineStart.at(4);
+                QVector<float> mainGaucheInterieur = lineStart.at(5);
                 QVector<float> mainGaucheExtreminte = lineStart.at(3);
 
                 QVector<float> distance = this->data->calculDistance(&mainDroite1, &mainDroite2);
@@ -129,7 +135,7 @@ void Cube::animate()
                 if (axe == Axes::X || axe == Axes::ALL)
                 {
                     qDebug() << "axe X";
-                    float d = distance.at(0) / 40; // 40 détermine l'échelle à laquelle le cube va être redimentionné (pour rester dans des proportions acceptables)
+                    float d = distance.at(Axes::X) / 40; // 40 détermine l'échelle à laquelle le cube va être redimentionné (pour rester dans des proportions acceptables)
 
                     x_B += d;
                     x_F += d;
@@ -144,7 +150,7 @@ void Cube::animate()
                 if (axe == Axes::Y || axe == Axes::ALL)
                 {
                     qDebug() << "axe Y";
-                    float d = distance.at(1) / 40;
+                    float d = distance.at(Axes::X) / 40;
 
                     y_A += d;
                     y_E += d;
@@ -159,7 +165,7 @@ void Cube::animate()
                 if (axe == Axes::Z || axe == Axes::ALL)
                 {
                     qDebug() << "axe Z";
-                    float d = distance.at(2) / 40;
+                    float d = distance.at(Axes::X) / 40;
 
                     z_A += d;
                     z_B += d;
