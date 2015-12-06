@@ -16,7 +16,7 @@ class Tools : public QWidget
         static Tools * getInstance();
 
     public Q_SLOTS:
-        void nextTool();
+        void nextTool(int value);
 
     private:
         Ui::tools ui;

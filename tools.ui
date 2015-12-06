@@ -35,6 +35,9 @@
        <height>128</height>
       </size>
      </property>
+     <property name="maximum">
+      <number>5</number>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>

@@ -123,7 +123,7 @@ void Cube::animate()
     }
     else
     {
-        this->currentMode = Tools::getInstance()->detectCurrentMode(this->data, lineStart);
+        this->currentMode = Tools::getInstance()->detectCurrentMode(this->data, lineStart, lineEnd);
         switch(this->currentMode)
         {
             case Modes::RESIZE:
