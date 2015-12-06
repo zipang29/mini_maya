@@ -4,6 +4,9 @@
 
 class MainWindow : public QGLViewer
 {
+    public:
+        static MainWindow * getInstance();
+
     protected :
         virtual void init();
         virtual void draw();
@@ -14,5 +17,6 @@ class MainWindow : public QGLViewer
         Cube * cube;
         DataMotion * data;
         QCursor cursor;
+        static MainWindow * w;
 };
 

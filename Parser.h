@@ -8,7 +8,7 @@ class Parser
 {
     public:
         Parser(QString file);
-        void parse();
+        bool parse();
         static DataMotion * getDataMotion();
 
     private:

@@ -10,16 +10,25 @@
 TEMPLATE = app
 TARGET   = mini_bee
 
+
 HEADERS  = \
     Parser.h \
     MainWindow.h \
     Cube.h \
     DataMotion.h \
-    Enum.h
+    Enum.h \
+    Tools.h
 SOURCES  = main.cpp \
     Parser.cpp \
     MainWindow.cpp \
     Cube.cpp \
-    DataMotion.cpp
+    DataMotion.cpp \
+    Tools.cpp
 
 include( ../examples.pri )
+
+FORMS += \
+    tools.ui
+
+RESOURCES += \
+    ressources.qrc

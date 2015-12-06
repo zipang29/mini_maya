@@ -71,11 +71,22 @@ QVector<float> DataMotion::calculDistance(QVector<float> * p1, QVector<float> * 
 {
     QVector<float> result;
 
-    result.push_back(p1->at(Axes::Z) - p2->at(Axes::Z));
-    result.push_back(p1->at(Axes::X) - p2->at(Axes::X));
-    result.push_back(p1->at(Axes::Y) - p2->at(Axes::Y));
+    result.push_back(p1->at(Coordonnees::X) - p2->at(Coordonnees::X));
+    result.push_back(p1->at(Coordonnees::Y) - p2->at(Coordonnees::Y));
+    result.push_back(p1->at(Coordonnees::Z) - p2->at(Coordonnees::Z));
 
     return result;
+}
+
+double DataMotion::calculDistance3D(QVector<float> * p1, QVector<float> * p2)
+{
+    qDebug() << "p1 : " << *p1;
+    qDebug() << "p2 : " << *p2;
+    /*double xd = p2->at(Coordonnees::X) - p1->at(Coordonnees::X);
+    double yd = p2->at(Coordonnees::Y) - p1->at(Coordonnees::Y);
+    double zd = p2->at(Coordonnees::Z) - p1->at(Coordonnees::Z);
+    return qSqrt(xd*xd + yd*yd + zd*zd);*/
+    return qSqrt(qPow(p2->at(Axes::X) - p1->at(Axes::X), 2) + qPow(p2->at(Axes::Y) - p1->at(Axes::Y), 2) + qPow(p2->at(Axes::Z) - p1->at(Axes::Z), 2));
 }
 
 Axes::Axe DataMotion::determineAxe(QVector<float> * p1, QVector<float> * p2)
@@ -90,39 +101,70 @@ Axes::Axe DataMotion::determineAxe(QVector<float> * p1, QVector<float> * p2)
     }
     qDebug() << distance;
 
-    if (-max == distance.at(Axes::Z))
-        return Axes::ALL;
-    if (max == qAbs(distance.at(Axes::Z)))
-        return Axes::Z;
-    if (max == qAbs(distance.at(Axes::X)))
-        return Axes::X;
-    //if (max == qAbs(distance.at(Axes::Y)))
-      //  return Axes::Y;
-    if (max == qAbs(distance.at(Axes::Y)))
-        return Axes::Y;
+    Axes::Axe res = Axes::UNDEFINED;
 
+    if (max == qAbs(distance.at(Coordonnees::X)))
+        res = Axes::X;
+    if (max == qAbs(distance.at(Coordonnees::Y)))
+        res = Axes::Y;
+    if (max == qAbs(distance.at(Coordonnees::Z)))
+        res = Axes::Z;
 
-    return Axes::UNDEFINED; // Inutile, juste pour la forme
+    //if (distance.at(Coordonnees::X) < 8) // Ne fonctionne pas correctement
+    //    res = Axes::ALL;
+
+    return res;
 }
 
-float DataMotion::calculerAngle(float A, float B, float C, char angle)
+double DataMotion::calculerAngle(float A, float B, float C, char angle)
 {
-    float A2 = qPow(A, 2);
-    float B2 = qPow(B, 2);
-    float C2 = qPow(C, 2);
     if (angle == 'A')
     {
-        return qAcos((B2 + C2 - A2) / 2 * B * C);
+        double AB = B - A;
+        double AC = C - A;
+        return (AB * AC) / qSqrt(qPow(AB, 2) + qPow(AC, 2));
+        //return qAcos((B2 + C2 - A2) / 2.0 * B * C);
     }
     if (angle == 'B')
     {
-        return qAcos((A2 + C2 - B2) / 2 * A * C);
+        double BC = C - B;
+        double BA = A - B;
+        return (BC * BA) / qSqrt(qPow(BC, 2) + qPow(BA, 2));
+        //return qAcos((A2 + C2 - B2) / 2 * A * C);
     }
     if (angle == 'C')
     {
-        return qAcos((A2 + B2 - C2) / 2 * A * B);
+        double CA = A - C;
+        double CB = B - C;
+        return (CA * CB) / qSqrt(qPow(CA, 2) + qPow(CB, 2));
+        //return qAcos((A2 + B2 - C2) / 2 * A * B);
     }
     return 0;
 }
 
+double DataMotion::calculerAngleA(QVector<float> A, QVector<float> B, QVector<float> C)
+{
+    double Xa = A.at(Coordonnees::X);
+    double Xb = B.at(Coordonnees::X);
+    double Xc = C.at(Coordonnees::X);
 
+    double Ya = A.at(Coordonnees::Y);
+    double Yb = B.at(Coordonnees::Y);
+    double Yc = C.at(Coordonnees::Y);
+
+    double Za = A.at(Coordonnees::Z);
+    double Zb = B.at(Coordonnees::Z);
+    double Zc = C.at(Coordonnees::Z);
+
+    double ABx = Xb - Xa;
+    double ABy = Yb - Ya;
+    double ABz = Zb - Za;
+
+    double ACx = Xc - Xa;
+    double ACy = Yc - Ya;
+    double ACz = Zc - Za;
+
+    double numerateur = (ABx) * (ACx) + (ABy) * (ACy) + (ABz) * (ACz);
+    double denominateur = qSqrt(qPow(ABx, 2) + qPow(ABy, 2) + qPow(ABz, 2)) * qSqrt(qPow(ACx, 2) + qPow(ACy, 2) + qPow(ACz, 2));
+    return qRadiansToDegrees(qCos(numerateur / denominateur));
+}

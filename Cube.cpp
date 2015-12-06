@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <qmath.h>
 #include "parser.h"
+#include "Tools.h"
 
 Cube::Cube()
 {
@@ -14,8 +15,8 @@ Cube::Cube()
 void Cube::init()
 {
     this->resolution = QApplication::desktop();
-    this->currentMode = Modes::ROTATE;
-    this->lineNumber = 0;
+    this->currentMode = Modes::PAUSE;
+    this->lineNumber = 1600;
     this->data = Parser::getDataMotion();
 
     // Angle de rotation
@@ -110,14 +111,19 @@ void Cube::draw()
 
 void Cube::animate()
 {
+
     QVector<QVector<float>> lineStart = this->data->getDataLine(this->lineNumber);
     QVector<QVector<float>> lineEnd;
     if (this->lineNumber+1 < this->data->getData()->size())
         lineEnd = this->data->getDataLine(this->lineNumber + 1);
     if (lineEnd.isEmpty())
+    {
         this->lineNumber = 0;// on recommence l'annimation
+        qDebug() << "================================RESTART==================================";
+    }
     else
     {
+        this->currentMode = Tools::getInstance()->detectCurrentMode(this->data, lineStart);
         switch(this->currentMode)
         {
             case Modes::RESIZE:
@@ -135,7 +141,7 @@ void Cube::animate()
                 if (axe == Axes::X || axe == Axes::ALL)
                 {
                     qDebug() << "axe X";
-                    float d = distance.at(Axes::X) / 40; // 40 détermine l'échelle à laquelle le cube va être redimentionné (pour rester dans des proportions acceptables)
+                    float d = distance.at(Coordonnees::X) / 40; // 40 détermine l'échelle à laquelle le cube va être redimentionné (pour rester dans des proportions acceptables)
 
                     x_B += d;
                     x_F += d;
@@ -150,7 +156,7 @@ void Cube::animate()
                 if (axe == Axes::Y || axe == Axes::ALL)
                 {
                     qDebug() << "axe Y";
-                    float d = distance.at(Axes::X) / 40;
+                    float d = distance.at(Coordonnees::X) / 40;
 
                     y_A += d;
                     y_E += d;
@@ -165,7 +171,7 @@ void Cube::animate()
                 if (axe == Axes::Z || axe == Axes::ALL)
                 {
                     qDebug() << "axe Z";
-                    float d = distance.at(Axes::X) / 40;
+                    float d = distance.at(Coordonnees::X) / 40;
 
                     z_A += d;
                     z_B += d;
@@ -240,6 +246,16 @@ void Cube::animate()
             case Modes::EXTRUDE:
             {
                 qDebug() << "Extrusion :";
+            }
+            break;
+            case Modes::PAUSE:
+            {
+
+            }
+            break;
+            case Modes::CHANGE_TOOL:
+            {
+
             }
             break;
             default:

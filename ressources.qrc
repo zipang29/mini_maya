@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/outils">
+        <file>redimention.png</file>
+        <file>extrude.png</file>
+        <file>rotation.png</file>
+        <file>selection.png</file>
+        <file>twist.png</file>
+    </qresource>
+</RCC>

@@ -3,6 +3,7 @@
 #include <QStringList>
 #include <QDebug>
 #include <QVector>
+#include <QCoreApplication>
 
 DataMotion * Parser::data = NULL;
 
@@ -12,11 +13,20 @@ Parser::Parser(QString file)
     Parser::data = new DataMotion();
 }
 
-void Parser::parse()
+bool Parser::parse()
 {
     QFile f(this->file);
+    if (!f.exists())
+    {
+        qCritical() << "Le fichier n'existe pas : " << this->file;
+        return false;
+    }
     if (!f.open(QIODevice::ReadOnly))
+    {
         qCritical() << "Impossible d'ouvrir le fichier " << this->file;
+        return false;
+    }
+
 
     QRegExp reg("\\s+");
 
@@ -62,13 +72,14 @@ void Parser::parse()
         for (i=0; i<nbOfMarkers; i++)
         {
             QVector<float> positionMarqueur(3);
-            positionMarqueur[0] = ((QString)splitLine.at((i*3)+1)).toFloat();
-            positionMarqueur[1] = ((QString)splitLine.at((i*3+1)+1)).toFloat();
-            positionMarqueur[2] = ((QString)splitLine.at((i*3+2)+1)).toFloat();
+            positionMarqueur[0] = ((QString)splitLine.at((i*3)+2)).toFloat();
+            positionMarqueur[1] = ((QString)splitLine.at((i*3+1)+2)).toFloat();
+            positionMarqueur[2] = ((QString)splitLine.at((i*3+2)+2)).toFloat();
             lineVec.push_back(positionMarqueur);
         }
         this->data->addDataMotion(lineVec);
     }
+    return true;
 }
 
 DataMotion * Parser::getDataMotion()

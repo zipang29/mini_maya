@@ -24,8 +24,10 @@ class DataMotion
 
         void addDataMotion(QVector<QVector<float> > line);
         QVector<float> calculDistance(QVector<float> * p1, QVector<float> * p2);
+        double calculDistance3D(QVector<float> * p1, QVector<float> * p2);
         Axes::Axe determineAxe(QVector<float> * p1, QVector<float> * p2);
-        float calculerAngle(float A, float B, float C, char angle);// calcul l'angle "angle" à partir des 3 points d'un triangle
+        double calculerAngle(float A, float B, float C, char angle);// calcul l'angle "angle" à partir des 3 points d'un triangle
+        double calculerAngleA(QVector<float> A, QVector<float> B, QVector<float> C);
 
     private:
         int nbOfFrames;

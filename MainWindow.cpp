@@ -6,6 +6,8 @@
 using namespace qglviewer;
 using namespace std;
 
+MainWindow * MainWindow::w = NULL;
+
 void MainWindow::init()
 {
     restoreStateFromFile();
@@ -33,4 +35,13 @@ void MainWindow::animate()
 QString MainWindow::helpString() const
 {
     return QString();
+}
+
+MainWindow * MainWindow::getInstance()
+{
+    if (MainWindow::w == NULL)
+    {
+        MainWindow::w = new MainWindow();
+    }
+    return MainWindow::w;
 }
