@@ -16,16 +16,31 @@ int main(int argc, char** argv)
     QCommandLineOption fileOption(QStringList() << "f" << "fichier", "Utilise les données de mouvement spécifiées dans le fichier");
     args.addOption(fileOption);
 
+    QCommandLineOption addressOption(QStringList() << "a" << "address", "Spécifie l'adresse ou doivent êtres récupérées les données de la motion capture lorsque l'on exécute le programme en mode real time");
+    args.addOption(addressOption);
+
     args.process(application);
 
     QStringList positionalArgs = args.positionalArguments();
-    if (positionalArgs.size() == 0)
+    /*if (positionalArgs.size() == 0)
     {
       args.showHelp(1);
-    }
+    }*/
 
     if (!args.isSet(fileOption))
-      args.showHelp(0);
+    {
+        Parser p;
+        if (args.isSet(addressOption))
+        {
+            QHostAddress * address = new QHostAddress(args.value(addressOption));
+            DataMotion * data = new DataMotion(DataModes::REAL_TIME, address);
+            p.setDataMotion(data);
+        }
+        else
+        {
+            args.showHelp(1);
+        }
+    }
     else
     {
       Parser p(positionalArgs[0]);

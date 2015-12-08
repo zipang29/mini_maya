@@ -8,6 +8,7 @@
 #include <QCursor>
 #include <QDesktopWidget>
 #include <QApplication>
+#include "qQualisysRT/src/point.h"
 
 class Cube
 {

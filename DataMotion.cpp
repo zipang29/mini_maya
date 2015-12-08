@@ -1,10 +1,37 @@
 #include "DataMotion.h"
 #include <QDebug>
 #include <qmath.h>
+#include <QCoreApplication>
+#include <QList>
+#include <qQualisysRT/src/point.h>
 
-DataMotion::DataMotion()
+DataMotion::DataMotion(DataModes::DataMode mode, QHostAddress *address)
 {
     this->data = new QVector<QVector<QVector<float>>>();
+    this->mode = mode;
+    this->address = address;
+
+    if (mode == DataModes::REAL_TIME)
+    {
+        this->frame = 0;
+        this->target = 100;
+
+        this->thread = new QThread();
+        this->thread->start();
+
+        this->qtm = new QualisysRT::QTM(*address);
+        this->qtm->moveToThread(thread);
+
+        connect(this->qtm, SIGNAL(started()), this, SLOT(started()));
+        connect(this->qtm, SIGNAL(stopped()), this, SLOT(stopped()));
+        connect(this->qtm, SIGNAL(failedToStart(QString)), this, SLOT(failedToStart(QString)));
+        QMetaObject::invokeMethod(qtm, "start");
+    }
+}
+
+DataModes::DataMode DataMotion::getMode()
+{
+    return this->mode;
 }
 
 void DataMotion::setNbOfFrames(int nb)
@@ -64,7 +91,10 @@ QVector<QVector<QVector<float>>> * DataMotion::getData()
 
 QVector<QVector<float>> DataMotion::getDataLine(int line)
 {
-    return data->at(line);
+    if (this->mode == DataModes::FILE)
+        return data->at(line);
+    else
+        return this->realTimeData;
 }
 
 QVector<float> DataMotion::calculDistance(QVector<float> * p1, QVector<float> * p2)
@@ -167,4 +197,58 @@ double DataMotion::calculerAngleA(QVector<float> A, QVector<float> B, QVector<fl
     double numerateur = (ABx) * (ACx) + (ABy) * (ACy) + (ABz) * (ACz);
     double denominateur = qSqrt(qPow(ABx, 2) + qPow(ABy, 2) + qPow(ABz, 2)) * qSqrt(qPow(ACx, 2) + qPow(ACy, 2) + qPow(ACz, 2));
     return qRadiansToDegrees(qCos(numerateur / denominateur));
+}
+
+void DataMotion::started()
+{
+    QList<QualisysRT::Point*> points = this->qtm->points();
+    this->pointNb = points.length();
+
+    for (int i=0; i<points.size(); i++)
+    {
+        QualisysRT::Point * p = points.at(i);
+        connect(p, SIGNAL(updated()), this, SLOT(pointUpdated()));
+    }
+    /*foreach (QualisysRT::Point * p, points) {
+        connect(p, SIGNAL(updated()), this, SLOT(pointUpdated()));
+    }*/
+}
+
+void DataMotion::stopped()
+{
+    qApp->exit();
+}
+
+void DataMotion::failedToStart(QString error)
+{
+    qCritical() << error;
+    qApp->exit();
+}
+
+void DataMotion::pointUpdated()
+{
+    static int count = 0;
+    QualisysRT::Point * p = qobject_cast<QualisysRT::Point*>(sender());
+
+
+    count++;
+    if (count == pointNb)
+    {
+        frame++;
+        count = 0;
+    }
+    if (frame == target)
+        stop();
+}
+
+void DataMotion::stop()
+{
+    QMetaObject::invokeMethod(qtm, "stop");
+    disconnect(this, SIGNAL(pointUpdated()));
+}
+
+DataMotion::~DataMotion()
+{
+    qtm->deleteLater();
+    thread->deleteLater();
 }

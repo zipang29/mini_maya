@@ -1,11 +1,4 @@
-# The <code>animate()</code> function illustrated by a water particle simulation.
-
-# When animation is activated (the Return key toggles animation), the <code>animate()</code> and
-# then the <code>draw()</code> functions are called in an infinite loop.
-
-# You can tune the frequency of your animation (default is 25Hz) using
-# <code>setAnimationInterval()</code>. The frame rate will then be fixed, provided that your
-# animation loop function is fast enough.
+include( ../examples.pri )
 
 TEMPLATE = app
 TARGET   = mini_bee
@@ -25,10 +18,13 @@ SOURCES  = main.cpp \
     DataMotion.cpp \
     Tools.cpp
 
-include( ../examples.pri )
+
 
 FORMS += \
     tools.ui
 
 RESOURCES += \
     ressources.qrc
+
+LIBS += "D:/Programmes/libQGLViewer-2.6.3/examples/mini_maya/qQualisysRT/lib/Release/qQualisysRT.lib"
+INCLUDEPATH += "D:/Programmes/libQGLViewer-2.6.3/examples/mini_maya/qQualisysRT/src"

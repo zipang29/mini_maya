@@ -42,5 +42,12 @@ struct Coordonnees {
     };
 };
 
+struct DataModes {
+    enum DataMode {
+        FILE = 0,
+        REAL_TIME = 1
+    };
+};
+
 #endif // ENUM
 

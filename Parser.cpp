@@ -7,10 +7,15 @@
 
 DataMotion * Parser::data = NULL;
 
+Parser::Parser()
+{
+
+}
+
 Parser::Parser(QString file)
 {
     this->file = file;
-    Parser::data = new DataMotion();
+    Parser::data = new DataMotion(DataModes::FILE);
 }
 
 bool Parser::parse()
@@ -80,6 +85,11 @@ bool Parser::parse()
         this->data->addDataMotion(lineVec);
     }
     return true;
+}
+
+void Parser::setDataMotion(DataMotion * data)
+{
+    Parser::data = data;
 }
 
 DataMotion * Parser::getDataMotion()
