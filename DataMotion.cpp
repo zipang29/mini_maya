@@ -19,7 +19,7 @@ DataMotion::DataMotion(DataModes::DataMode mode, QHostAddress *address)
         this->thread = new QThread();
         this->thread->start();
 
-        this->qtm = new QualisysRT::QTM(*address);
+        this->qtm = new QTM(*address);
         this->qtm->moveToThread(thread);
 
         connect(this->qtm, SIGNAL(started()), this, SLOT(started()));
@@ -201,12 +201,12 @@ double DataMotion::calculerAngleA(QVector<float> A, QVector<float> B, QVector<fl
 
 void DataMotion::started()
 {
-    QList<QualisysRT::Point*> points = this->qtm->points();
+    QList<Point*> points = this->qtm->points();
     this->pointNb = points.length();
 
     for (int i=0; i<points.size(); i++)
     {
-        QualisysRT::Point * p = points.at(i);
+        Point * p = points.at(i);
         connect(p, SIGNAL(updated()), this, SLOT(pointUpdated()));
     }
     /*foreach (QualisysRT::Point * p, points) {
@@ -228,14 +228,19 @@ void DataMotion::failedToStart(QString error)
 void DataMotion::pointUpdated()
 {
     static int count = 0;
-    QualisysRT::Point * p = qobject_cast<QualisysRT::Point*>(sender());
-
+    Point * p = qobject_cast<Point*>(sender());
 
     count++;
     if (count == pointNb)
     {
         frame++;
         count = 0;
+    }
+    else
+    {
+        if (points.size() < pointNb)
+            points.push_back(p);
+
     }
     if (frame == target)
         stop();

@@ -17,6 +17,8 @@ void MainWindow::init()
 
     glPointSize(3.0);
     setGridIsDrawn(false);
+    setFPSIsDisplayed(true);
+    setAnimationPeriod(5);//5ms = 200Hz
     //help();
     startAnimation();
 }

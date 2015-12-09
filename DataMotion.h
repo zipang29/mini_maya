@@ -7,6 +7,10 @@
 #include "Enum.h"
 #include "qQualisysRT/src/qtm.h"
 #include <QThread>
+#include <QList>
+#include "qQualisysRT/src/point.h"
+
+using namespace QualisysRT;
 
 class DataMotion : public QObject
 {
@@ -55,6 +59,8 @@ class DataMotion : public QObject
 
         //mode temps réel
         QVector<QVector<float>> realTimeData;
+        QVector<Point*> points;
+
         QHostAddress * address;
         QThread* thread;
         QualisysRT::QTM* qtm;

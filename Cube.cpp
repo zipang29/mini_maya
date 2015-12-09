@@ -15,7 +15,7 @@ Cube::Cube()
 void Cube::init()
 {
     this->resolution = QApplication::desktop();
-    this->currentMode = Modes::PAUSE;
+    this->currentMode = Modes::RESIZE;
     this->lineNumber = 1600;
     this->data = Parser::getDataMotion();
 
@@ -123,7 +123,7 @@ void Cube::animate()
     }
     else
     {
-        this->currentMode = Tools::getInstance()->detectCurrentMode(this->data, lineStart, lineEnd);
+        //this->currentMode = Tools::getInstance()->detectCurrentMode(this->data, lineStart, lineEnd);
         switch(this->currentMode)
         {
             case Modes::RESIZE:
