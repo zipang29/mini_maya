@@ -16,7 +16,7 @@ void Cube::init()
 {
     this->resolution = QApplication::desktop();
     this->currentMode = Modes::RESIZE;
-    this->lineNumber = 1600;
+    this->lineNumber = 0;
     this->data = Parser::getDataMotion();
 
     // Angle de rotation
@@ -112,31 +112,43 @@ void Cube::draw()
 void Cube::animate()
 {
 
-    QVector<QVector<float>> lineStart = this->data->getDataLine(this->lineNumber);
-    QVector<QVector<float>> lineEnd;
-    if (this->lineNumber+1 < this->data->getData()->size())
-        lineEnd = this->data->getDataLine(this->lineNumber + 1);
-    if (lineEnd.isEmpty())
-    {
-        this->lineNumber = 0;// on recommence l'annimation
-        qDebug() << "================================RESTART==================================";
-    }
-    else
-    {
+    //QVector<QVector<float>> lineStart = this->data->getDataLine(this->lineNumber);
+    //QVector<QVector<float>> lineEnd;
+    //if (this->lineNumber+1 < this->data->getData()->size())
+    //    lineEnd = this->data->getDataLine(this->lineNumber + 1);
+    //if (lineEnd.isEmpty())
+    //{
+    //    this->lineNumber = 0;// on recommence l'annimation
+    //    qDebug() << "================================RESTART==================================";
+    //}
+    //else
+    //{
         //this->currentMode = Tools::getInstance()->detectCurrentMode(this->data, lineStart, lineEnd);
         switch(this->currentMode)
         {
             case Modes::RESIZE:
             {
                 qDebug() << "Redimention :";
-                QVector<float> mainDroite1 = lineStart.at(1);
+                /*QVector<float> mainDroite1 = lineStart.at(1);
                 QVector<float> mainDroite2 = lineEnd.at(1);
 
                 QVector<float> mainGaucheInterieur = lineStart.at(5);
                 QVector<float> mainGaucheExtreminte = lineStart.at(3);
 
                 QVector<float> distance = this->data->calculDistance(&mainDroite1, &mainDroite2);
-                Axes::Axe axe = this->data->determineAxe(&mainGaucheInterieur, &mainGaucheExtreminte);
+                Axes::Axe axe = this->data->determineAxe(&mainGaucheInterieur, &mainGaucheExtreminte);*/
+
+                Point * phalangeDroite1 = data->getPoint(lineNumber, "FR");
+                Point * phalangeDroite2 = data->getPoint(lineNumber+1, "FR");
+
+                Point * poignetGauche = data->getPoint(lineNumber, "PL");
+                Point * doigtsGauche = data->getPoint(lineNumber, "DL");
+
+                if (phalangeDroite1 == NULL || phalangeDroite2 == NULL || poignetGauche == NULL || doigtsGauche == NULL)
+                    return;
+
+                QVector<float> distance = data->calculDistance(phalangeDroite1, phalangeDroite2);
+                Axes::Axe axe = data->determineAxe(poignetGauche, doigtsGauche);
 
                 if (axe == Axes::X || axe == Axes::ALL)
                 {
@@ -191,7 +203,7 @@ void Cube::animate()
             case Modes::ROTATE:
             {
                 qDebug() << "Rotation : ";
-                QVector<float> mainDroite1 = lineStart.at(1);
+                /*QVector<float> mainDroite1 = lineStart.at(1);
                 QVector<float> mainDroite2 = lineEnd.at(1);
 
                 QVector<float> mainGaucheInterieur = lineStart.at(5);
@@ -199,7 +211,21 @@ void Cube::animate()
 
                 Axes::Axe axe = this->data->determineAxe(&mainGaucheInterieur, &mainGaucheExtreminte);
                 float angleRotation = 0;
-                QVector<float> distance = this->data->calculDistance(&mainDroite1, &mainDroite2);
+                QVector<float> distance = this->data->calculDistance(&mainDroite1, &mainDroite2);*/
+
+                Point * phalangeDroite1 = data->getPoint(lineNumber, "FR");
+                Point * phalangeDroite2 = data->getPoint(lineNumber+1, "FR");
+
+                Point * poignetGauche = data->getPoint(lineNumber, "PL");
+                Point * doigtsGauche = data->getPoint(lineNumber, "DL");
+
+                if (phalangeDroite1 == NULL || phalangeDroite2 == NULL || poignetGauche == NULL || doigtsGauche == NULL)
+                    return;
+
+                Axes::Axe axe = data->determineAxe(poignetGauche, doigtsGauche);
+                float angleRotation = 0;
+                QVector<float> distance = data->calculDistance(phalangeDroite1, phalangeDroite2);
+
                 if (axe == Axes::X || axe == Axes::ALL)
                 {
                     qDebug() << "axe X";
@@ -236,11 +262,11 @@ void Cube::animate()
             case Modes::SELECT:
             {
                 qDebug() << "Selection :";
-                int width = this->resolution->screenGeometry().width();
+                /*int width = this->resolution->screenGeometry().width();
                 int height = this->resolution->screenGeometry().height();
 
                 QVector<float> mainCurseur = lineEnd.at(4);
-                this->c.setPos(mainCurseur.at(Axes::X), mainCurseur.at(Axes::Y));
+                this->c.setPos(mainCurseur.at(Axes::X), mainCurseur.at(Axes::Y));*/
             }
             break;
             case Modes::EXTRUDE:
@@ -262,7 +288,7 @@ void Cube::animate()
                 qCritical() << "Le mode sélectionné n'existe pas.";
             break;
         }
-    }
+    //}
 
     this->lineNumber++;
 }

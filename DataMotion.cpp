@@ -7,86 +7,88 @@
 
 DataMotion::DataMotion(DataModes::DataMode mode, QHostAddress *address)
 {
-    this->data = new QVector<QVector<QVector<float>>>();
-    this->mode = mode;
-    this->address = address;
+    data = new QVector<QVector<QVector<float>>>();
+    mode = mode;
+    address = address;
+    currentLine = 0;
+    points = new QVector<QVector<Point*>*>();
+
+    frame = 0;
+    target = 100;
 
     if (mode == DataModes::REAL_TIME)
     {
-        this->frame = 0;
-        this->target = 100;
+        thread = new QThread();
+        thread->start();
 
-        this->thread = new QThread();
-        this->thread->start();
+        qtm = new QTM(*address);
+        qtm->moveToThread(thread);
 
-        this->qtm = new QTM(*address);
-        this->qtm->moveToThread(thread);
-
-        connect(this->qtm, SIGNAL(started()), this, SLOT(started()));
-        connect(this->qtm, SIGNAL(stopped()), this, SLOT(stopped()));
-        connect(this->qtm, SIGNAL(failedToStart(QString)), this, SLOT(failedToStart(QString)));
+        connect(qtm, SIGNAL(started()), this, SLOT(started()));
+        connect(qtm, SIGNAL(stopped()), this, SLOT(stopped()));
+        connect(qtm, SIGNAL(failedToStart(QString)), this, SLOT(failedToStart(QString)));
         QMetaObject::invokeMethod(qtm, "start");
     }
 }
 
 DataModes::DataMode DataMotion::getMode()
 {
-    return this->mode;
+    return mode;
 }
 
 void DataMotion::setNbOfFrames(int nb)
 {
-    this->nbOfFrames = nb;
+    nbOfFrames = nb;
 }
 
 void DataMotion::setNbOfCameras(int nb)
 {
-    this->nbOfCameras = nb;
+    nbOfCameras = nb;
 }
 
 void DataMotion::setNbOfMarquers(int nb)
 {
-    this->nbOfMarkers = nb;
+    nbOfMarkers = nb;
 }
 
 void DataMotion::setFrequency(int freq)
 {
-    this->frequency = freq;
+    frequency = freq;
 }
 
 void DataMotion::setNbOfAnalog(int nb)
 {
-    this->nbOfAnalog = nb;
+    nbOfAnalog = nb;
 }
 
 void DataMotion::setAnalogFrequency(int freq)
 {
-    this->analogFrequency = freq;
+    analogFrequency = freq;
 }
 
 void DataMotion::setDescription(QString description)
 {
-    this->description = description;
+    description = description;
 }
 
 void DataMotion::setTimestamp(QString timestamp)
 {
-    this->timestamp = timestamp;
+    timestamp = timestamp;
 }
 
 void DataMotion::setTypeOfData(QString type)
 {
-    this->typeOfData = type;
+    typeOfData = type;
 }
 
 void DataMotion::addDataMotion(QVector<QVector<float>> line)
 {
-    this->data->push_back(line);
+    data->push_back(line);
 }
 
 QVector<QVector<QVector<float>>> * DataMotion::getData()
 {
-    return this->data;
+    return data;
 }
 
 QVector<QVector<float>> DataMotion::getDataLine(int line)
@@ -94,16 +96,16 @@ QVector<QVector<float>> DataMotion::getDataLine(int line)
     if (this->mode == DataModes::FILE)
         return data->at(line);
     else
-        return this->realTimeData;
+        return realTimeData;
 }
 
-QVector<float> DataMotion::calculDistance(QVector<float> * p1, QVector<float> * p2)
+QVector<float> DataMotion::calculDistance(Point * p1, Point * p2)
 {
     QVector<float> result;
 
-    result.push_back(p1->at(Coordonnees::X) - p2->at(Coordonnees::X));
-    result.push_back(p1->at(Coordonnees::Y) - p2->at(Coordonnees::Y));
-    result.push_back(p1->at(Coordonnees::Z) - p2->at(Coordonnees::Z));
+    result.push_back(p1->x() - p2->x());
+    result.push_back(p1->y() - p2->y());
+    result.push_back(p1->z() - p2->z());
 
     return result;
 }
@@ -119,7 +121,7 @@ double DataMotion::calculDistance3D(QVector<float> * p1, QVector<float> * p2)
     return qSqrt(qPow(p2->at(Axes::X) - p1->at(Axes::X), 2) + qPow(p2->at(Axes::Y) - p1->at(Axes::Y), 2) + qPow(p2->at(Axes::Z) - p1->at(Axes::Z), 2));
 }
 
-Axes::Axe DataMotion::determineAxe(QVector<float> * p1, QVector<float> * p2)
+Axes::Axe DataMotion::determineAxe(Point * p1, Point * p2)
 {
     QVector<float> distance = calculDistance(p1, p2);
 
@@ -235,12 +237,17 @@ void DataMotion::pointUpdated()
     {
         frame++;
         count = 0;
+        QVector<Point*> * l = new QVector<Point*>();
+        points->push_back(l);
     }
     else
     {
-        if (points.size() < pointNb)
-            points.push_back(p);
-
+        if (points->size() < pointNb)
+        {
+            int sizeV1 = points->size();
+            QVector<Point*> * l = points->at(sizeV1);
+            l->push_back(p);
+        }
     }
     if (frame == target)
         stop();
@@ -250,6 +257,39 @@ void DataMotion::stop()
 {
     QMetaObject::invokeMethod(qtm, "stop");
     disconnect(this, SIGNAL(pointUpdated()));
+}
+
+QVector<Point*> * DataMotion::getNextLine(int line)
+{
+    if (line < frame) // Si les données sont prêtes
+    {
+        return points->at(line);
+    }
+    else // Sinon on doit attendre
+        return NULL;
+}
+
+Point * DataMotion::getPoint(int n, QString name)
+{
+    if (n < frame)
+    {
+        qDebug() << "n : " << n;
+        qDebug() << "frame : " << frame;
+        QVector<Point*> * line = points->at(n);
+        for (int i=0; i<line->size(); i++)
+        {
+            if (line->at(i)->name() == name)
+                return line->at(i);
+        }
+        return NULL;
+    }
+    else
+        return NULL;
+}
+
+int DataMotion::getMaxFrame()
+{
+    return frame;
 }
 
 DataMotion::~DataMotion()
