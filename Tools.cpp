@@ -93,7 +93,7 @@ Modes::Mode Tools::detectCurrentMode(DataMotion * data, int lineNumber)
             result = Modes::PAUSE;
         }
     }
-    else // on valide l'outil
+    else // on valide l'outil sélectionné
     {
         qInfo() << modeToString();
         result = tmpMode;

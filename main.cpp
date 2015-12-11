@@ -50,8 +50,5 @@ int main(int argc, char** argv)
         t.getGlWidget()->setAnimationPeriod(5);//5ms = 200Hz
     t.show();
 
-    int width = QApplication::desktop()->screenGeometry().width();
-    int height = QApplication::desktop()->screenGeometry().height();
-
     return application.exec();
 }
