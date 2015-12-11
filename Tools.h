@@ -19,10 +19,12 @@ class Tools : public QWidget
         Modes::Mode detectCurrentMode(DataMotion * data, int lineNumber);
         MainWindow * getGlWidget();
         Modes::Mode nextTool(int value);
+        QString modeToString();
 
     private:
         MainWindow * gl;
         QLabel * icon;
+        Modes::Mode tmpMode;
 };
 
 #endif // TOOLS_H

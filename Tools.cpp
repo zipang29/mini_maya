@@ -20,6 +20,8 @@ Tools::Tools() : QWidget()
     mainLayout->addWidget(gl, 1, 0, 1, 4);
 
     setLayout(mainLayout);
+
+    tmpMode = Modes::PAUSE;
 }
 
 Modes::Mode Tools::nextTool(int value)
@@ -87,10 +89,34 @@ Modes::Mode Tools::detectCurrentMode(DataMotion * data, int lineNumber)
                 value = 5;
             if (value < 0)
                 value = 0;
-            result = nextTool(value);
+            tmpMode = nextTool(value);
+            result = Modes::PAUSE;
         }
     }
+    else // on valide l'outil
+    {
+        qInfo() << modeToString();
+        result = tmpMode;
+    }
 
+    return result;
+}
+
+QString Tools::modeToString()
+{
+    QString result = "Outils courant : UNDEFINED";
+    if (tmpMode == Modes::RESIZE)
+        result = "Outil courant : redimention";
+    else if (tmpMode == Modes::ROTATE)
+        result = "Outil courant : rotation";
+    else if (tmpMode == Modes::SELECT)
+        result = "Outil courant : selection";
+    else if (tmpMode == Modes::TWIST)
+        result = "Outil courant : twist";
+    else if (tmpMode == Modes::EXTRUDE)
+        result = "Outil courant : extrude";
+    else if (tmpMode == Modes::PAUSE)
+        result = "PAUSE";
     return result;
 }
 
