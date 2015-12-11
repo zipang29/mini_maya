@@ -65,7 +65,8 @@ bool Parser::parse()
 
     QString dataType = f.readLine(); // DATA_INCLUDED
 
-    f.readLine(); // On ignore les noms des marqueurs
+    QString names = f.readLine(); // On ignore les noms des marqueurs
+    QStringList splitNames = names.split(reg);
 
     int i = 0;
     while (!f.atEnd())
@@ -73,16 +74,23 @@ bool Parser::parse()
         QString line = f.readLine();
         QStringList splitLine = line.split(reg);
 
-        QVector<QVector<float>> lineVec;
+        int j = 0;
+        //QVector<QVector<float>> lineVec;
         for (i=0; i<nbOfMarkers; i++)
         {
-            QVector<float> positionMarqueur(3);
-            positionMarqueur[0] = ((QString)splitLine.at((i*3)+2)).toFloat();
-            positionMarqueur[1] = ((QString)splitLine.at((i*3+1)+2)).toFloat();
-            positionMarqueur[2] = ((QString)splitLine.at((i*3+2)+2)).toFloat();
-            lineVec.push_back(positionMarqueur);
+            Point * p = new Point(splitNames.at(j+1));
+            p->x() = ((QString)splitLine.at((i*3)+2)).toDouble();
+            p->y() = ((QString)splitLine.at((i*3+1)+2)).toDouble();
+            p->z() = ((QString)splitLine.at((i*3+2)+2)).toDouble();
+            data->addPoint(p);
+            j++;
+            //QVector<float> positionMarqueur(3);
+            //positionMarqueur[0] = ((QString)splitLine.at((i*3)+2)).toFloat();
+            //positionMarqueur[1] = ((QString)splitLine.at((i*3+1)+2)).toFloat();
+            //positionMarqueur[2] = ((QString)splitLine.at((i*3+2)+2)).toFloat();
+            //lineVec.push_back(positionMarqueur);
         }
-        this->data->addDataMotion(lineVec);
+        //this->data->addDataMotion(lineVec);
     }
     return true;
 }

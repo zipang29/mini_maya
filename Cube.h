@@ -9,16 +9,22 @@
 #include <QDesktopWidget>
 #include <QApplication>
 #include "qQualisysRT/src/point.h"
+#include "Tools.h"
 
-class Cube
+class Tools;
+
+class Cube : public QObject
 {
+    Q_OBJECT
+
     public:
-        Cube();
+        Cube(Tools * parent);
         void init();
         void draw();
         void animate();
         void changeMode(Modes::Mode mode);
         void setCursor(QCursor c);
+        ~Cube();
 
     private:
         QDesktopWidget * resolution;
@@ -26,6 +32,7 @@ class Cube
         Modes::Mode currentMode;
         int lineNumber;
         DataMotion * data;
+        Tools * tools;
 
         // Correspond aux vertex du cube. On part de la face avant dans le sens des aiguilles d'une montre en partant du point en haut à gauche de la
         // face du devant du cube puise on fait pareille pour la face arrière

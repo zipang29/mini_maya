@@ -32,12 +32,13 @@ class DataMotion : public QObject
         DataModes::DataMode getMode();
         QVector<Point *> *getNextLine(int line);
         Point * getPoint(int n, QString name);
+        void addPoint(Point * p);
         int getMaxFrame(); // Retourne le nombre maximum de frame actuel disponible
 
 
         void addDataMotion(QVector<QVector<float> > line);
         QVector<float> calculDistance(Point *p1, Point *p2);
-        double calculDistance3D(QVector<float> * p1, QVector<float> * p2);
+        double calculDistance3D(Point *p1, Point *p2);
         Axes::Axe determineAxe(Point * p1, Point * p2);
         double calculerAngle(float A, float B, float C, char angle);// calcul l'angle "angle" à partir des 3 points d'un triangle
         double calculerAngleA(QVector<float> A, QVector<float> B, QVector<float> C);

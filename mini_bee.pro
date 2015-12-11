@@ -20,8 +20,7 @@ SOURCES  = main.cpp \
 
 
 
-FORMS += \
-    tools.ui
+FORMS +=
 
 RESOURCES += \
     ressources.qrc

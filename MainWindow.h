@@ -1,11 +1,17 @@
+#ifndef MAIN_WINDOW_H
+#define MAIN_WINDOW_H
+
 #include <QGLViewer/qglviewer.h>
 #include "Cube.h"
 #include "DataMotion.h"
 
+class Cube;
+class Tools;
+
 class MainWindow : public QGLViewer
 {
     public:
-        static MainWindow * getInstance();
+        MainWindow(QWidget *parent);
 
     protected :
         virtual void init();
@@ -17,6 +23,10 @@ class MainWindow : public QGLViewer
         Cube * cube;
         DataMotion * data;
         QCursor cursor;
-        static MainWindow * w;
+
+        QLabel * icon;
+
+        Tools * tools;
 };
 
+#endif

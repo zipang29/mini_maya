@@ -6,19 +6,21 @@
 using namespace qglviewer;
 using namespace std;
 
-MainWindow * MainWindow::w = NULL;
+MainWindow::MainWindow(QWidget * parent) : QGLViewer()
+{
+    tools = (Tools*) parent;
+}
 
 void MainWindow::init()
 {
     restoreStateFromFile();
     glDisable(GL_LIGHTING);
 
-    this->cube = new Cube();
+    this->cube = new Cube(tools);
 
     glPointSize(3.0);
     setGridIsDrawn(false);
     setFPSIsDisplayed(true);
-    setAnimationPeriod(5);//5ms = 200Hz
     //help();
     startAnimation();
 }
@@ -37,13 +39,4 @@ void MainWindow::animate()
 QString MainWindow::helpString() const
 {
     return QString();
-}
-
-MainWindow * MainWindow::getInstance()
-{
-    if (MainWindow::w == NULL)
-    {
-        MainWindow::w = new MainWindow();
-    }
-    return MainWindow::w;
 }

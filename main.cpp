@@ -1,4 +1,3 @@
-#include "MainWindow.h"
 #include <qapplication.h>
 #include <QCommandLineParser>
 #include "parser.h"
@@ -22,10 +21,6 @@ int main(int argc, char** argv)
     args.process(application);
 
     QStringList positionalArgs = args.positionalArguments();
-    /*if (positionalArgs.size() == 0)
-    {
-      args.showHelp(1);
-    }*/
 
     if (!args.isSet(fileOption))
     {
@@ -49,16 +44,14 @@ int main(int argc, char** argv)
     }
 
     Tools t;
+    if (!args.isSet(fileOption) && args.isSet(addressOption)) // mode REAL_TIME
+        t.getGlWidget()->setAnimationPeriod(20);//5ms = 200Hz
+    else // mode file
+        t.getGlWidget()->setAnimationPeriod(5);//5ms = 200Hz
     t.show();
-
-    MainWindow * w = MainWindow::getInstance();
-    w->setWindowTitle("animation");
 
     int width = QApplication::desktop()->screenGeometry().width();
     int height = QApplication::desktop()->screenGeometry().height();
-
-    w->setFixedSize(width, height-250);
-    w->show();
 
     return application.exec();
 }

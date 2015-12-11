@@ -5,17 +5,17 @@
 #include <QDebug>
 #include <qmath.h>
 #include "parser.h"
-#include "Tools.h"
 
-Cube::Cube()
+Cube::Cube(Tools * parent)
 {
+    tools = parent;
     this->init();
 }
 
 void Cube::init()
 {
     this->resolution = QApplication::desktop();
-    this->currentMode = Modes::RESIZE;
+    this->currentMode = Modes::PAUSE;
     this->lineNumber = 0;
     this->data = Parser::getDataMotion();
 
@@ -111,184 +111,154 @@ void Cube::draw()
 
 void Cube::animate()
 {
-
-    //QVector<QVector<float>> lineStart = this->data->getDataLine(this->lineNumber);
-    //QVector<QVector<float>> lineEnd;
-    //if (this->lineNumber+1 < this->data->getData()->size())
-    //    lineEnd = this->data->getDataLine(this->lineNumber + 1);
-    //if (lineEnd.isEmpty())
-    //{
-    //    this->lineNumber = 0;// on recommence l'annimation
-    //    qDebug() << "================================RESTART==================================";
-    //}
-    //else
-    //{
-        //this->currentMode = Tools::getInstance()->detectCurrentMode(this->data, lineStart, lineEnd);
-        switch(this->currentMode)
+    this->currentMode = tools->detectCurrentMode(this->data, lineNumber, currentMode);
+    switch(this->currentMode)
+    {
+        case Modes::RESIZE:
         {
-            case Modes::RESIZE:
+            qDebug() << "Redimention :";
+
+            Point * phalangeDroite1 = data->getPoint(lineNumber, "FR");
+            Point * phalangeDroite2 = data->getPoint(lineNumber+1, "FR");
+
+            Point * poignetGauche = data->getPoint(lineNumber, "PL");
+            Point * doigtsGauche = data->getPoint(lineNumber, "DL");
+
+            if (phalangeDroite1 == NULL || phalangeDroite2 == NULL || poignetGauche == NULL || doigtsGauche == NULL)
+                return;
+
+            QVector<float> distance = data->calculDistance(phalangeDroite1, phalangeDroite2);
+            Axes::Axe axe = data->determineAxe(poignetGauche, doigtsGauche);
+
+            if (axe == Axes::X || axe == Axes::ALL)
             {
-                qDebug() << "Redimention :";
-                /*QVector<float> mainDroite1 = lineStart.at(1);
-                QVector<float> mainDroite2 = lineEnd.at(1);
+                qDebug() << "axe X";
+                float d = distance.at(Coordonnees::X) / 40; // 40 détermine l'échelle à laquelle le cube va être redimentionné (pour rester dans des proportions acceptables)
 
-                QVector<float> mainGaucheInterieur = lineStart.at(5);
-                QVector<float> mainGaucheExtreminte = lineStart.at(3);
+                x_B += d;
+                x_F += d;
+                x_G += d;
+                x_C += d;
 
-                QVector<float> distance = this->data->calculDistance(&mainDroite1, &mainDroite2);
-                Axes::Axe axe = this->data->determineAxe(&mainGaucheInterieur, &mainGaucheExtreminte);*/
-
-                Point * phalangeDroite1 = data->getPoint(lineNumber, "FR");
-                Point * phalangeDroite2 = data->getPoint(lineNumber+1, "FR");
-
-                Point * poignetGauche = data->getPoint(lineNumber, "PL");
-                Point * doigtsGauche = data->getPoint(lineNumber, "DL");
-
-                if (phalangeDroite1 == NULL || phalangeDroite2 == NULL || poignetGauche == NULL || doigtsGauche == NULL)
-                    return;
-
-                QVector<float> distance = data->calculDistance(phalangeDroite1, phalangeDroite2);
-                Axes::Axe axe = data->determineAxe(poignetGauche, doigtsGauche);
-
-                if (axe == Axes::X || axe == Axes::ALL)
-                {
-                    qDebug() << "axe X";
-                    float d = distance.at(Coordonnees::X) / 40; // 40 détermine l'échelle à laquelle le cube va être redimentionné (pour rester dans des proportions acceptables)
-
-                    x_B += d;
-                    x_F += d;
-                    x_G += d;
-                    x_C += d;
-
-                    x_A -= d;
-                    x_E -= d;
-                    x_D -= d;
-                    x_H -= d;
-                }
-                if (axe == Axes::Y || axe == Axes::ALL)
-                {
-                    qDebug() << "axe Y";
-                    float d = distance.at(Coordonnees::X) / 40;
-
-                    y_A += d;
-                    y_E += d;
-                    y_F += d;
-                    y_B += d;
-
-                    y_D -= d;
-                    y_H -= d;
-                    y_G -= d;
-                    y_C -= d;
-                }
-                if (axe == Axes::Z || axe == Axes::ALL)
-                {
-                    qDebug() << "axe Z";
-                    float d = distance.at(Coordonnees::X) / 40;
-
-                    z_A += d;
-                    z_B += d;
-                    z_D += d;
-                    z_C += d;
-
-                    z_E -= d;
-                    z_F -= d;
-                    z_H -= d;
-                    z_G -= d;
-                }
-
-                if (axe == Axes::UNDEFINED)
-                    qCritical() << "L'/les axe(s) de redimentionnement n'a/n'ont' pas pu être(s) déterminé(s).";
+                x_A -= d;
+                x_E -= d;
+                x_D -= d;
+                x_H -= d;
             }
-            break;
-            case Modes::ROTATE:
+            if (axe == Axes::Y || axe == Axes::ALL)
             {
-                qDebug() << "Rotation : ";
-                /*QVector<float> mainDroite1 = lineStart.at(1);
-                QVector<float> mainDroite2 = lineEnd.at(1);
+                qDebug() << "axe Y";
+                float d = distance.at(Coordonnees::X) / 40;
 
-                QVector<float> mainGaucheInterieur = lineStart.at(5);
-                QVector<float> mainGaucheExtreminte = lineStart.at(3);
+                y_A += d;
+                y_E += d;
+                y_F += d;
+                y_B += d;
 
-                Axes::Axe axe = this->data->determineAxe(&mainGaucheInterieur, &mainGaucheExtreminte);
-                float angleRotation = 0;
-                QVector<float> distance = this->data->calculDistance(&mainDroite1, &mainDroite2);*/
-
-                Point * phalangeDroite1 = data->getPoint(lineNumber, "FR");
-                Point * phalangeDroite2 = data->getPoint(lineNumber+1, "FR");
-
-                Point * poignetGauche = data->getPoint(lineNumber, "PL");
-                Point * doigtsGauche = data->getPoint(lineNumber, "DL");
-
-                if (phalangeDroite1 == NULL || phalangeDroite2 == NULL || poignetGauche == NULL || doigtsGauche == NULL)
-                    return;
-
-                Axes::Axe axe = data->determineAxe(poignetGauche, doigtsGauche);
-                float angleRotation = 0;
-                QVector<float> distance = data->calculDistance(phalangeDroite1, phalangeDroite2);
-
-                if (axe == Axes::X || axe == Axes::ALL)
-                {
-                    qDebug() << "axe X";
-                    angleRotation = distance.at(Axes::X);//(distance.at(Axes::X) / 360) * 100;
-                    angleX += angleRotation;// Todo a calculer à partir des données
-                    if (angleX > 360)
-                        angleX = 0;
-                }
-                if (axe == Axes::Y || axe == Axes::ALL)
-                {
-                    qDebug() << "axe Y";
-                    angleRotation = distance.at(Axes::X);//(distance.at(Axes::X) / 360) * 100;
-                    angleY += angleRotation;// Todo a calculer à partir des données
-                    if (angleY > 360)
-                        angleY = 0;
-                }
-                if (axe == Axes::Z || axe == Axes::ALL)
-                {
-                    qDebug() << "axe Z";
-                    angleRotation = distance.at(Axes::X);//(distance.at(Axes::X) / 360) * 100;
-                    angleZ += angleRotation;// Todo a calculer à partir des données
-                    if (angleZ > 360)
-                        angleZ = 0;
-                }
-                if (axe == Axes::UNDEFINED)
-                    qCritical() << "L'/les axe(s) de redimentionnement n'a/n'ont' pas pu être(s) déterminé(s).";
+                y_D -= d;
+                y_H -= d;
+                y_G -= d;
+                y_C -= d;
             }
-            break;
-            case Modes::TWIST:
+            if (axe == Axes::Z || axe == Axes::ALL)
             {
-                qDebug() << "Twist :";
-            }
-            break;
-            case Modes::SELECT:
-            {
-                qDebug() << "Selection :";
-                /*int width = this->resolution->screenGeometry().width();
-                int height = this->resolution->screenGeometry().height();
+                qDebug() << "axe Z";
+                float d = distance.at(Coordonnees::X) / 40;
 
-                QVector<float> mainCurseur = lineEnd.at(4);
-                this->c.setPos(mainCurseur.at(Axes::X), mainCurseur.at(Axes::Y));*/
-            }
-            break;
-            case Modes::EXTRUDE:
-            {
-                qDebug() << "Extrusion :";
-            }
-            break;
-            case Modes::PAUSE:
-            {
+                z_A += d;
+                z_B += d;
+                z_D += d;
+                z_C += d;
 
+                z_E -= d;
+                z_F -= d;
+                z_H -= d;
+                z_G -= d;
             }
-            break;
-            case Modes::CHANGE_TOOL:
-            {
 
-            }
-            break;
-            default:
-                qCritical() << "Le mode sélectionné n'existe pas.";
-            break;
+            if (axe == Axes::UNDEFINED)
+                qCritical() << "L'/les axe(s) de redimentionnement n'a/n'ont' pas pu être(s) déterminé(s).";
         }
-    //}
+        break;
+        case Modes::ROTATE:
+        {
+            qDebug() << "Rotation : ";
+
+            Point * phalangeDroite1 = data->getPoint(lineNumber, "FR");
+            Point * phalangeDroite2 = data->getPoint(lineNumber+1, "FR");
+
+            Point * poignetGauche = data->getPoint(lineNumber, "PL");
+            Point * doigtsGauche = data->getPoint(lineNumber, "DL");
+
+            if (phalangeDroite1 == NULL || phalangeDroite2 == NULL || poignetGauche == NULL || doigtsGauche == NULL)
+                return;
+
+            Axes::Axe axe = data->determineAxe(poignetGauche, doigtsGauche);
+            float angleRotation = 0;
+            QVector<float> distance = data->calculDistance(phalangeDroite1, phalangeDroite2);
+
+            if (axe == Axes::X || axe == Axes::ALL)
+            {
+                qDebug() << "axe X";
+                angleRotation = distance.at(Axes::X);//(distance.at(Axes::X) / 360) * 100;
+                angleX += angleRotation;// Todo a calculer à partir des données
+                if (angleX > 360)
+                    angleX = 0;
+            }
+            if (axe == Axes::Y || axe == Axes::ALL)
+            {
+                qDebug() << "axe Y";
+                angleRotation = distance.at(Axes::X);//(distance.at(Axes::X) / 360) * 100;
+                angleY += angleRotation;// Todo a calculer à partir des données
+                if (angleY > 360)
+                    angleY = 0;
+            }
+            if (axe == Axes::Z || axe == Axes::ALL)
+            {
+                qDebug() << "axe Z";
+                angleRotation = distance.at(Axes::X);//(distance.at(Axes::X) / 360) * 100;
+                angleZ += angleRotation;// Todo a calculer à partir des données
+                if (angleZ > 360)
+                    angleZ = 0;
+            }
+            if (axe == Axes::UNDEFINED)
+                qCritical() << "L'/les axe(s) de redimentionnement n'a/n'ont' pas pu être(s) déterminé(s).";
+        }
+        break;
+        case Modes::TWIST:
+        {
+            qDebug() << "Twist :";
+        }
+        break;
+        case Modes::SELECT:
+        {
+            qDebug() << "Selection :";
+            /*int width = this->resolution->screenGeometry().width();
+            int height = this->resolution->screenGeometry().height();
+
+            QVector<float> mainCurseur = lineEnd.at(4);
+            this->c.setPos(mainCurseur.at(Axes::X), mainCurseur.at(Axes::Y));*/
+        }
+        break;
+        case Modes::EXTRUDE:
+        {
+            qDebug() << "Extrusion :";
+        }
+        break;
+        case Modes::PAUSE:
+        {
+
+        }
+        break;
+        case Modes::CHANGE_TOOL:
+        {
+
+        }
+        break;
+        default:
+            qCritical() << "Le mode sélectionné n'existe pas.";
+        break;
+    }
 
     this->lineNumber++;
 }
@@ -301,4 +271,10 @@ void Cube::setCursor(QCursor c)
 void Cube::changeMode(Modes::Mode mode)
 {
     this->currentMode = mode;
+}
+
+Cube::~Cube()
+{
+    resolution->deleteLater();
+    data->deleteLater();
 }

@@ -110,15 +110,13 @@ QVector<float> DataMotion::calculDistance(Point * p1, Point * p2)
     return result;
 }
 
-double DataMotion::calculDistance3D(QVector<float> * p1, QVector<float> * p2)
+double DataMotion::calculDistance3D(Point * p1, Point * p2)
 {
-    qDebug() << "p1 : " << *p1;
-    qDebug() << "p2 : " << *p2;
     /*double xd = p2->at(Coordonnees::X) - p1->at(Coordonnees::X);
     double yd = p2->at(Coordonnees::Y) - p1->at(Coordonnees::Y);
     double zd = p2->at(Coordonnees::Z) - p1->at(Coordonnees::Z);
     return qSqrt(xd*xd + yd*yd + zd*zd);*/
-    return qSqrt(qPow(p2->at(Axes::X) - p1->at(Axes::X), 2) + qPow(p2->at(Axes::Y) - p1->at(Axes::Y), 2) + qPow(p2->at(Axes::Z) - p1->at(Axes::Z), 2));
+    return qSqrt(qPow(p2->x() - p1->x(), 2) + qPow(p2->y() - p1->y(), 2) + qPow(p2->z() - p1->z(), 2));
 }
 
 Axes::Axe DataMotion::determineAxe(Point * p1, Point * p2)
@@ -273,8 +271,6 @@ Point * DataMotion::getPoint(int n, QString name)
 {
     if (n < frame)
     {
-        qDebug() << "n : " << n;
-        qDebug() << "frame : " << frame;
         QVector<Point*> * line = points->at(n);
         for (int i=0; i<line->size(); i++)
         {
@@ -292,8 +288,30 @@ int DataMotion::getMaxFrame()
     return frame;
 }
 
+void DataMotion::addPoint(Point * p)
+{
+    if (points->empty())
+        points->push_back(new QVector<Point*>);
+    if (points->at(frame)->size() >= nbOfMarkers)
+    {
+        frame++;
+        points->push_back(new QVector<Point*>());
+    }
+
+    points->at(frame)->push_back(p);
+}
+
 DataMotion::~DataMotion()
 {
     qtm->deleteLater();
     thread->deleteLater();
+    for (int i=0; i<points->size(); i++)
+    {
+        for (int j=0; j<points->at(i)->size();j++)
+        {
+            delete points->at(i)->at(j);
+        }
+        delete points->at(i);
+    }
+    delete points;
 }

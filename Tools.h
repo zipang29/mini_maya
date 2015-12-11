@@ -1,10 +1,13 @@
 #ifndef TOOLS_H
 #define TOOLS_H
 
-#include <QtWidgets>
+#include <QWidget>
 #include "ui_tools.h"
 #include "Enum.h"
 #include "DataMotion.h"
+#include "MainWindow.h"
+
+class MainWindow;
 
 class Tools : public QWidget
 {
@@ -12,17 +15,18 @@ class Tools : public QWidget
 
     public:
         Tools();
-        Modes::Mode detectCurrentMode(DataMotion * data, QVector<QVector<float>> lineStart, QVector<QVector<float>> lineEnd);
-        static Tools * getInstance();
+        ~Tools();
+        Modes::Mode detectCurrentMode(DataMotion * data, int lineNumber, Modes::Mode currentMode);
+        //static Tools * getInstance();
+        MainWindow * getGlWidget();
 
     public Q_SLOTS:
         void nextTool(int value);
 
     private:
-        Ui::tools ui;
-        //DataMotion * data;
-        static Tools * t;
-
+        MainWindow * gl;
+        QLabel * icon;
+        //static Tools * t;
 };
 
 #endif // TOOLS_H
