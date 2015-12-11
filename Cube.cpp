@@ -111,7 +111,7 @@ void Cube::draw()
 
 void Cube::animate()
 {
-    this->currentMode = tools->detectCurrentMode(this->data, lineNumber, currentMode);
+    this->currentMode = tools->detectCurrentMode(this->data, lineNumber);
     switch(this->currentMode)
     {
         case Modes::RESIZE:

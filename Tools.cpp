@@ -2,8 +2,7 @@
 #include <QDesktopWidget>
 #include "MainWindow.h"
 #include <QSlider>
-
-//Tools * Tools::t = NULL;
+#include <QGridLayout>
 
 Tools::Tools() : QWidget()
 {
@@ -21,31 +20,40 @@ Tools::Tools() : QWidget()
     mainLayout->addWidget(gl, 1, 0, 1, 4);
 
     setLayout(mainLayout);
-
-    //connect(this, SIGNAL(valueChanged(int)), this, SLOT(nextTool(int)));
-    //connect(this, SIGNAL(valueChanged(int)), ui.selecteur, SLOT(setValue(int)));
-    //connect(this, SIGNAL(valueChanged(int)), ui.selecteur, SLOT(setValue(int)));
-    //connect(this, SIGNAL(changeTool()), this, SLOT(nextTool()));
 }
 
-void Tools::nextTool(int value)
+Modes::Mode Tools::nextTool(int value)
 {
-    qDebug() << "ok" << value;
+    Modes::Mode mode = Modes::PAUSE;
     if (value == 0)
+    {
         icon->setPixmap(QPixmap(":/outils/redimention.png"));
+        mode = Modes::RESIZE;
+    }
     else if (value == 1)
+    {
         icon->setPixmap(QPixmap(":/outils/rotation.png"));
+        mode = Modes::ROTATE;
+    }
     else if (value == 2)
+    {
         icon->setPixmap(QPixmap(":/outils/twist.png"));
+        mode = Modes::TWIST;
+    }
     else if (value == 3)
+    {
         icon->setPixmap(QPixmap(":/outils/selection.png"));
+        mode = Modes::SELECT;
+    }
     else if (value == 4)
+    {
         icon->setPixmap(QPixmap(":/outils/extrude.png"));
-    else
-        qDebug() << "erreur";
+        mode = Modes::EXTRUDE;
+    }
+    return mode;
 }
 
-Modes::Mode Tools::detectCurrentMode(DataMotion * data, int lineNumber, Modes::Mode currentMode)
+Modes::Mode Tools::detectCurrentMode(DataMotion * data, int lineNumber)
 {
     Modes::Mode result = Modes::PAUSE;
 
@@ -54,6 +62,9 @@ Modes::Mode Tools::detectCurrentMode(DataMotion * data, int lineNumber, Modes::M
 
     Point * poignetG = data->getPoint(lineNumber, "PL");
     Point * doigtsG = data->getPoint(lineNumber, "DL");
+
+    if (poignetD == NULL || doigtsD == NULL || poignetG == NULL || doigtsG == NULL)
+        return Modes::PAUSE;
 
     double distanceMainDroite = data->calculDistance3D(poignetD, doigtsD);
     double distanceMainGauche = data->calculDistance3D(poignetG, doigtsG);
@@ -76,7 +87,7 @@ Modes::Mode Tools::detectCurrentMode(DataMotion * data, int lineNumber, Modes::M
                 value = 5;
             if (value < 0)
                 value = 0;
-            nextTool(value);
+            result = nextTool(value);
         }
     }
 
@@ -87,15 +98,6 @@ MainWindow * Tools::getGlWidget()
 {
     return gl;
 }
-
-/*Tools * Tools::getInstance()
-{
-    if (Tools::t == NULL)
-    {
-        Tools::t = new Tools();
-    }
-    return Tools::t;
-}*/
 
 Tools::~Tools()
 {

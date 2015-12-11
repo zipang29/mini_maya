@@ -18,10 +18,6 @@ SOURCES  = main.cpp \
     DataMotion.cpp \
     Tools.cpp
 
-
-
-FORMS +=
-
 RESOURCES += \
     ressources.qrc
 

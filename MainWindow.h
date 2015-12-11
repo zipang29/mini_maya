@@ -7,6 +7,7 @@
 
 class Cube;
 class Tools;
+class QLabel;
 
 class MainWindow : public QGLViewer
 {
