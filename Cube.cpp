@@ -132,7 +132,7 @@ void Cube::drawWithNames()
 
 void Cube::animate()
 {
-    this->currentMode = tools->detectCurrentMode(data, lineNumber, currentMode);
+    this->currentMode = tools->detectCurrentMode(data, lineNumber);
     switch(this->currentMode)
     {
         case Modes::RESIZE:
