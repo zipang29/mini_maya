@@ -56,7 +56,7 @@ Modes::Mode Tools::nextTool(int value)
     return mode;
 }
 
-Modes::Mode Tools::detectCurrentMode(DataMotion * data, int lineNumber, Modes::Mode currentMode)
+Modes::Mode Tools::detectCurrentMode(DataMotion * data, int lineNumber)
 {
     Modes::Mode result = Modes::PAUSE;
 
