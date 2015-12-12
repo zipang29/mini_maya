@@ -16,7 +16,7 @@ class Tools : public QWidget
     public:
         Tools();
         ~Tools();
-        Modes::Mode detectCurrentMode(DataMotion * data, int lineNumber);
+        Modes::Mode detectCurrentMode(DataMotion * data, int lineNumber, Modes::Mode currentMode);
         MainWindow * getGlWidget();
         Modes::Mode nextTool(int value);
         QString modeToString();

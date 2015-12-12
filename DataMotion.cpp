@@ -112,10 +112,6 @@ QVector<float> DataMotion::calculDistance(Point * p1, Point * p2)
 
 double DataMotion::calculDistance3D(Point * p1, Point * p2)
 {
-    /*double xd = p2->at(Coordonnees::X) - p1->at(Coordonnees::X);
-    double yd = p2->at(Coordonnees::Y) - p1->at(Coordonnees::Y);
-    double zd = p2->at(Coordonnees::Z) - p1->at(Coordonnees::Z);
-    return qSqrt(xd*xd + yd*yd + zd*zd);*/
     return qSqrt(qPow(p2->x() - p1->x(), 2) + qPow(p2->y() - p1->y(), 2) + qPow(p2->z() - p1->z(), 2));
 }
 
@@ -209,9 +205,6 @@ void DataMotion::started()
         Point * p = points.at(i);
         connect(p, SIGNAL(updated()), this, SLOT(pointUpdated()));
     }
-    /*foreach (QualisysRT::Point * p, points) {
-        connect(p, SIGNAL(updated()), this, SLOT(pointUpdated()));
-    }*/
 }
 
 void DataMotion::stopped()

@@ -5,10 +5,13 @@
 #include <QDebug>
 #include <qmath.h>
 #include "parser.h"
+#include <QMessageBox>
+#include <QtTest/QtTest>
 
-Cube::Cube(Tools * parent)
+Cube::Cube(Tools * parent, QGLViewer *viewer)
 {
     tools = parent;
+    this->viewer = viewer;
     this->init();
 }
 
@@ -25,93 +28,108 @@ void Cube::init()
     angleZ = 0;
 
     // Initialisation des positions des vertex du cube
-    x_G = 1;
-    y_G = -1;
-    z_G = 1;
+    pointG = new Point("G");
+    pointG->x() = 1;
+    pointG->y() = -1;
+    pointG->z() = 1;
 
-    x_C = 1;
-    y_C = -1;
-    z_C = -1;
+    pointC = new Point("C");
+    pointC->x() = 1;
+    pointC->y() = -1;
+    pointC->z() = -1;
 
-    x_B = 1;
-    y_B = 1;
-    z_B = -1;
+    pointB = new Point("B");
+    pointB->x() = 1;
+    pointB->y() = 1;
+    pointB->z() = -1;
 
-    x_F = 1;
-    y_F = 1;
-    z_F = 1;
+    pointF = new Point("F");
+    pointF->x() = 1;
+    pointF->y() = 1;
+    pointF->z() = 1;
 
-    x_A = -1;
-    y_A = 1;
-    z_A = -1;
+    pointA = new Point("A");
+    pointA->x() = -1;
+    pointA->y() = 1;
+    pointA->z() = -1;
 
-    x_E = -1;
-    y_E = 1;
-    z_E = 1;
+    pointE = new Point("E");
+    pointE->x() = -1;
+    pointE->y() = 1;
+    pointE->z() = 1;
 
-    x_D = -1;
-    y_D = -1;
-    z_D = -1;
+    pointD = new Point("D");
+    pointD->x() = -1;
+    pointD->y() = -1;
+    pointD->z() = -1;
 
-    x_H = -1;
-    y_H = -1;
-    z_H = 1;
+    pointH = new Point("H");
+    pointH->x() = -1;
+    pointH->y() = -1;
+    pointH->z() = 1;
+
+    Face * faceHaut = new Face(pointF, pointB, pointA, pointE);
+    faceHaut->setNormal(0, 1, 0);
+    faceHaut->setColor(QColor(255, 0, 0));
+
+    Face * faceDroite = new Face(pointG, pointC, pointB, pointF);
+    faceDroite->setNormal(1, 0, 0);
+    faceDroite->setColor(QColor(0, 255, 0));
+
+    Face * faceBas = new Face(pointH, pointD, pointC, pointG);
+    faceBas->setNormal(0, -1, 0);
+    faceBas->setColor(QColor(0, 0, 255));
+
+    Face * faceGauche = new Face(pointE, pointA, pointD, pointH);
+    faceGauche->setNormal(-1, 0, 0);
+    faceGauche->setColor(QColor(255, 255, 0));
+
+    Face * faceDerriere = new Face(pointB, pointC, pointD, pointA);
+    faceDerriere->setNormal(0, 0, -1);
+    faceDerriere->setColor(QColor(0, 255, 255));
+
+    Face * faceAvant = new Face(pointG, pointF, pointE, pointH);
+    faceAvant->setNormal(0, 0, 1);
+    faceAvant->setColor(QColor(255, 0, 255));
+
+    listFace.push_back(faceHaut);
+    listFace.push_back(faceDroite);
+    listFace.push_back(faceBas);
+    listFace.push_back(faceGauche);
+    listFace.push_back(faceDerriere);
+    listFace.push_back(faceAvant);
 }
 
-void Cube::draw()
+void Cube::draw(int selectedName)
 {
     glRotatef(angleX, 1, 0, 0);
     glRotatef(angleY, 0, 1, 0);
     glRotatef(angleZ, 0, 0, 1);
-    glBegin(GL_QUADS);
 
-        glNormal3d(0, 1, 0);
-        glColor3ub(255, 0, 0); //face rouge => face haut
-        glVertex3d(x_F, y_F, z_F);
-        glVertex3d(x_B, y_B, z_B);
-        glVertex3d(x_A, y_A, z_A);
-        glVertex3d(x_E, y_E, z_E);
+    for (int i=0; i<listFace.size(); i++)
+    {
+        glPushMatrix();
+        if (selectedName == i)
+            listFace.at(i)->draw(true);
+        else
+            listFace.at(i)->draw();
+        glPopMatrix();
+    }
+}
 
-        glNormal3d(1, 0, 0);
-        glColor3ub(0, 255, 0); //face verte => face droite => FD
-        glVertex3f(x_G, y_G, z_G);
-        glVertex3f(x_C, y_C, z_C);
-        glVertex3f(x_B, y_B, z_B);
-        glVertex3f(x_F, y_F, z_F);
-
-        glNormal3d(0, -1, 0);
-        glColor3ub(0, 0, 255); //face bleue => fasse bas
-        glVertex3d(x_H, y_H, z_H);
-        glVertex3d(x_D, y_D, z_D);
-        glVertex3d(x_C, y_C, z_C);
-        glVertex3d(x_G, y_G, z_G);
-
-        glNormal3d(-1, 0, 0);
-        glColor3ub(255, 255, 0); //face jaune => face gauche
-        glVertex3d(x_E, y_E, z_E);
-        glVertex3d(x_A, y_A, z_A);
-        glVertex3d(x_D, y_D, z_D);
-        glVertex3d(x_H, y_H, z_H);
-
-        glNormal3d(0, 0, -1);
-        glColor3ub(0, 255, 255); //face cyan => face derrière
-        glVertex3d(x_B, y_B, z_B);
-        glVertex3d(x_C, y_C, z_C);
-        glVertex3d(x_D, y_D, z_D);
-        glVertex3d(x_A, y_A, z_A);
-
-        glNormal3d(0, 0, 1);
-        glColor3ub(255, 0, 255); //face magenta => face avant
-        glVertex3d(x_G, y_G, z_G);
-        glVertex3d(x_F, y_F, z_F);
-        glVertex3d(x_E, y_E, z_E);
-        glVertex3d(x_H, y_H, z_H);
-    glEnd();
+void Cube::drawWithNames()
+{
+    for (int i=0; i<listFace.size(); i++)
+    {
+        glPushName(i);
+        listFace.at(i)->draw();
+        glPopName();
+    }
 }
 
 void Cube::animate()
 {
-    this->currentMode = tools->detectCurrentMode(this->data, lineNumber);
+    this->currentMode = tools->detectCurrentMode(data, lineNumber, currentMode);
     switch(this->currentMode)
     {
         case Modes::RESIZE:
@@ -135,45 +153,45 @@ void Cube::animate()
                 qDebug() << "axe X";
                 float d = distance.at(Coordonnees::X) / 40; // 40 détermine l'échelle à laquelle le cube va être redimentionné (pour rester dans des proportions acceptables)
 
-                x_B += d;
-                x_F += d;
-                x_G += d;
-                x_C += d;
+                pointB->x() += d;
+                pointF->x() += d;
+                pointG->x() += d;
+                pointC->x() += d;
 
-                x_A -= d;
-                x_E -= d;
-                x_D -= d;
-                x_H -= d;
+                pointA->x() -= d;
+                pointE->x() -= d;
+                pointD->x() -= d;
+                pointH->x() -= d;
             }
             if (axe == Axes::Y || axe == Axes::ALL)
             {
                 qDebug() << "axe Y";
                 float d = distance.at(Coordonnees::X) / 40;
 
-                y_A += d;
-                y_E += d;
-                y_F += d;
-                y_B += d;
+                pointA->y() += d;
+                pointE->y() += d;
+                pointF->y() += d;
+                pointB->y() += d;
 
-                y_D -= d;
-                y_H -= d;
-                y_G -= d;
-                y_C -= d;
+                pointD->y() -= d;
+                pointH->y() -= d;
+                pointG->y() -= d;
+                pointC->y() -= d;
             }
             if (axe == Axes::Z || axe == Axes::ALL)
             {
                 qDebug() << "axe Z";
                 float d = distance.at(Coordonnees::X) / 40;
 
-                z_A += d;
-                z_B += d;
-                z_D += d;
-                z_C += d;
+                pointA->z() += d;
+                pointB->z() += d;
+                pointD->z() += d;
+                pointC->z() += d;
 
-                z_E -= d;
-                z_F -= d;
-                z_H -= d;
-                z_G -= d;
+                pointE->z() -= d;
+                pointF->z() -= d;
+                pointH->z() -= d;
+                pointG->z() -= d;
             }
 
             if (axe == Axes::UNDEFINED)
@@ -233,11 +251,28 @@ void Cube::animate()
         case Modes::SELECT:
         {
             qDebug() << "Selection :";
-            /*int width = this->resolution->screenGeometry().width();
-            int height = this->resolution->screenGeometry().height();
+            Point * p = data->getPoint(lineNumber, "DL");
 
-            QVector<float> mainCurseur = lineEnd.at(4);
-            this->c.setPos(mainCurseur.at(Axes::X), mainCurseur.at(Axes::Y));*/
+            if (p == NULL)
+                return;
+
+            curseur.setX(qAbs(p->y()));// Y == X pour effectuer le mapping des coordonnées
+            curseur.setY(qAbs(p->x()));
+            qDebug() << curseur;
+            this->c.setPos(curseur.x(), curseur.y());
+
+            Point * poignetD = data->getPoint(lineNumber, "PR");
+            Point * doigtsD = data->getPoint(lineNumber, "DR");
+
+            if (poignetD == NULL || doigtsD == NULL)
+                return;
+
+            double distanceMainDroite = data->calculDistance3D(poignetD, doigtsD);
+            if (distanceMainDroite > 80 && distanceMainDroite < 100) // clic
+            {
+                QTest::mouseClick(viewer, Qt::RightButton);
+                this->currentMode = Modes::PAUSE;
+            }
         }
         break;
         case Modes::EXTRUDE:

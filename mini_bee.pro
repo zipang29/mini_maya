@@ -10,13 +10,15 @@ HEADERS  = \
     Cube.h \
     DataMotion.h \
     Enum.h \
-    Tools.h
+    Tools.h \
+    Face.h
 SOURCES  = main.cpp \
     Parser.cpp \
     MainWindow.cpp \
     Cube.cpp \
     DataMotion.cpp \
-    Tools.cpp
+    Tools.cpp \
+    Face.cpp
 
 RESOURCES += \
     ressources.qrc

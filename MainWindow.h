@@ -17,7 +17,9 @@ class MainWindow : public QGLViewer
     protected :
         virtual void init();
         virtual void draw();
+        virtual void drawWithNames();
         virtual void animate();
+        virtual void postSelection(const QPoint& point);
         virtual QString helpString() const;
 
     private:
@@ -28,6 +30,9 @@ class MainWindow : public QGLViewer
         QLabel * icon;
 
         Tools * tools;
+
+        // Sélection de face à la souris
+        qglviewer::Vec orig, dir, selectedPoint;
 };
 
 #endif

@@ -10,6 +10,8 @@
 #include <QApplication>
 #include "qQualisysRT/src/point.h"
 #include "Tools.h"
+#include "Face.h"
+#include <QList>
 
 class Tools;
 
@@ -18,9 +20,10 @@ class Cube : public QObject
     Q_OBJECT
 
     public:
-        Cube(Tools * parent);
+        Cube(Tools * parent, QGLViewer * viewer);
         void init();
-        void draw();
+        void draw(int selectedName);
+        void drawWithNames();
         void animate();
         void changeMode(Modes::Mode mode);
         void setCursor(QCursor c);
@@ -33,21 +36,25 @@ class Cube : public QObject
         int lineNumber;
         DataMotion * data;
         Tools * tools;
+        QGLViewer * viewer;
 
-        // Correspond aux vertex du cube. On part de la face avant dans le sens des aiguilles d'une montre en partant du point en haut à gauche de la
-        // face du devant du cube puise on fait pareille pour la face arrière
-        float x_A, y_A, z_A;
-        float x_B, y_B, z_B;
-        float x_C, y_C, z_C;
-        float x_D, y_D, z_D;
-        float x_E, y_E, z_E;
-        float x_F, y_F, z_F;
-        float x_G, y_G, z_G;
-        float x_H, y_H, z_H;
+        Point * pointG;
+        Point * pointC;
+        Point * pointB;
+        Point * pointF;
+        Point * pointA;
+        Point * pointE;
+        Point * pointD;
+        Point * pointH;
+
+        QList<Face*> listFace;
 
         float angleX;
         float angleY;
         float angleZ;
+
+        // Selection
+        QPoint curseur;
 };
 
 #endif // CUBE_H

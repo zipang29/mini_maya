@@ -22,32 +22,33 @@ Tools::Tools() : QWidget()
     setLayout(mainLayout);
 
     tmpMode = Modes::PAUSE;
+    nextTool(Modes::PAUSE);
 }
 
 Modes::Mode Tools::nextTool(int value)
 {
-    Modes::Mode mode = Modes::PAUSE;
-    if (value == 0)
+    Modes::Mode mode = Modes::RESIZE;
+    if (value == Modes::RESIZE)
     {
         icon->setPixmap(QPixmap(":/outils/redimention.png"));
         mode = Modes::RESIZE;
     }
-    else if (value == 1)
+    else if (value == Modes::ROTATE)
     {
         icon->setPixmap(QPixmap(":/outils/rotation.png"));
         mode = Modes::ROTATE;
     }
-    else if (value == 2)
+    else if (value == Modes::TWIST)
     {
         icon->setPixmap(QPixmap(":/outils/twist.png"));
         mode = Modes::TWIST;
     }
-    else if (value == 3)
+    else if (value == Modes::SELECT)
     {
         icon->setPixmap(QPixmap(":/outils/selection.png"));
         mode = Modes::SELECT;
     }
-    else if (value == 4)
+    else if (value == Modes::EXTRUDE)
     {
         icon->setPixmap(QPixmap(":/outils/extrude.png"));
         mode = Modes::EXTRUDE;
@@ -55,7 +56,7 @@ Modes::Mode Tools::nextTool(int value)
     return mode;
 }
 
-Modes::Mode Tools::detectCurrentMode(DataMotion * data, int lineNumber)
+Modes::Mode Tools::detectCurrentMode(DataMotion * data, int lineNumber, Modes::Mode currentMode)
 {
     Modes::Mode result = Modes::PAUSE;
 
