@@ -110,7 +110,10 @@ void Cube::draw(int selectedName)
     {
         glPushMatrix();
         if (selectedName == i)
+        {
             listFace.at(i)->draw(true);
+            selectedFace = selectedName;
+        }
         else
             listFace.at(i)->draw();
         glPopMatrix();

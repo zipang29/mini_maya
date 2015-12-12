@@ -55,6 +55,7 @@ class Cube : public QObject
 
         // Selection
         QPoint curseur;
+        int selectedFace;
 };
 
 #endif // CUBE_H
